@@ -8,8 +8,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.volyVary.service.TransformationService;
 
-@RequestMapping("/transformation")
 @Controller
+@RequestMapping("/transformation")
 public class TransformationController {
     @Autowired
     private TransformationService transformationService;
@@ -20,7 +20,7 @@ public class TransformationController {
 
     @GetMapping("/detailsLotPaddyTransforme")
     public ModelAndView afficheDetailLotTransforme() {
-        ModelAndView m = new ModelAndView("DetailsLotPaddy_transforme");
+        ModelAndView m = new ModelAndView("DetailsLotPaddy_tranforme");
         return m;
     }
 

@@ -1,12 +1,23 @@
 package com.volyVary.modele;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "livreur")
 public class Livreur {
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id_livreur")
+    private int idLivreur;
+
+    public Livreur() {
+    }
+
+    public int getidLivreur() {
+        return idLivreur;
+    }
+
+    public void setidLivreur(int idLivreur) {
+        this.idLivreur = idLivreur;
+    }
 }

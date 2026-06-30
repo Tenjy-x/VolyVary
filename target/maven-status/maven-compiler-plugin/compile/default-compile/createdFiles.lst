@@ -2,12 +2,12 @@ com/volyVary/modele/Fourniture.class
 com/volyVary/modele/LotPaddyTransforme.class
 com/volyVary/modele/Client.class
 com/volyVary/modele/HistoriqueCollecte.class
-com/volyVary/repository/ClientRepository.class
 com/volyVary/VolyVaryApplication.class
+com/volyVary/repository/ClientRepository.class
 com/volyVary/modele/Distribution.class
 com/volyVary/modele/TypeTransaction.class
-com/volyVary/modele/DetailLotTransforme.class
 com/volyVary/modele/CategorieFourniture.class
+com/volyVary/modele/DetailLotTransforme.class
 com/volyVary/modele/HistoriqueDistribution.class
 com/volyVary/modele/HistoriqueTransaction.class
 com/volyVary/modele/Livreur.class

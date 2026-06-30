@@ -1,12 +1,23 @@
 package com.volyVary.modele;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "detail_lot_transforme")
 public class DetailLotTransforme {
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id_detail_lot_transforme")
+    private int idDetailLotTransforme;
+
+    public DetailLotTransforme() {
+    }
+
+    public int getidDetailLotTransforme() {
+        return idDetailLotTransforme;
+    }
+
+    public void setidDetailLotTransforme(int idDetailLotTransforme) {
+        this.idDetailLotTransforme = idDetailLotTransforme;
+    }
 }

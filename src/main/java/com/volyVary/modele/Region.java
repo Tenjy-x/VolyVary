@@ -1,12 +1,23 @@
 package com.volyVary.modele;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "region")
 public class Region {
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id_region")
+    private int idRegion;
+
+    public Region() {
+    }
+
+    public int getidRegion() {
+        return idRegion;
+    }
+
+    public void setidRegion(int idRegion) {
+        this.idRegion = idRegion;
+    }
 }

@@ -8,7 +8,7 @@ public class Transformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_transformation")
-    private int idTransformation;
+    private Integer idTransformation;
 
     public Transformation() {
     }

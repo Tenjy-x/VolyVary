@@ -8,16 +8,16 @@ public class LotPaddy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_lot_paddy")
-    private int idLotPaddy;
+    private Integer idLotPaddy;
 
     public LotPaddy() {
     }
 
-    public int getidLotPaddy() {
+    public Integer getidLotPaddy() {
         return idLotPaddy;
     }
 
-    public void setidLotPaddy(int idLotPaddy) {
+    public void setidLotPaddy(Integer idLotPaddy) {
         this.idLotPaddy = idLotPaddy;
     }
 }

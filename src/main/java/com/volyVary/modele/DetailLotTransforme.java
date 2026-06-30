@@ -8,12 +8,12 @@ public class DetailLotTransforme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detail_lot_transforme")
-    private int idDetailLotTransforme;
+    private Integer idDetailLotTransforme;
 
     public DetailLotTransforme() {
     }
 
-    public int getidDetailLotTransforme() {
+    public Integer getidDetailLotTransforme() {
         return idDetailLotTransforme;
     }
 

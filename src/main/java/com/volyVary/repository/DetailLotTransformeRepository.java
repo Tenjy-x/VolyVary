@@ -2,7 +2,9 @@ package com.volyVary.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.volyVary.modele.DetailLotTransforme;
 @Repository
-public interface DetailLotTransformeRepository extends JpaRepository<DetailLotTransformeRepository, Integer>{
+public interface DetailLotTransformeRepository extends JpaRepository<DetailLotTransforme, Integer>{
     
 }

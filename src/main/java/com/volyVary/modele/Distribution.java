@@ -8,7 +8,7 @@ public class Distribution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_distribution")
-    private int idDistribution;
+    private Integer idDistribution;
 
     public Distribution() {
     }

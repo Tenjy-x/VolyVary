@@ -7,4 +7,7 @@ import java.util.List;
 @Table(name = "categorie_fourniture")
 public class CategorieFourniture {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 }

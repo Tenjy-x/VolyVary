@@ -26,7 +26,7 @@ public class TransformationController {
 
     @GetMapping("/lotPaddyTransforme")
     public ModelAndView afficheLotTransforme() {
-        ModelAndView m = new ModelAndView("LotPaddy_transforme");
+        ModelAndView m = new ModelAndView("LotPaddy_tranforme");
         return m;
     }
 }

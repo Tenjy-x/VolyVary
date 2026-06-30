@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 @Table(name = "lot_paddy_transforme")
 public class LotPaddyTransforme {
-      @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 }

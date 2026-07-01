@@ -8,10 +8,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "lot_paddy_transforme")
 public class LotPaddyTransforme {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_lot_paddy_transforme")
-    private int idLotPaddyTransforme;
+    @Column(name = "id")
+    private int id;
 
     @Column(name = "reference")
     private String reference;
@@ -22,14 +23,47 @@ public class LotPaddyTransforme {
     @Column(name = "date")
     private Date date;
 
-    @OneToMany(mappedBy = "DetailLotPaddyTransforme")
+    @OneToMany(mappedBy = "lotPaddyTransforme", cascade = CascadeType.ALL)
     private List<DetailLotTransforme> detailLotTransforme;
 
-    public int getidLotPaddyTransforme() {
-        return idLotPaddyTransforme;
+    public int getId() {
+        return id;
     }
 
-    public void setidLotPaddyTransforme(int idLotPaddyTransforme) {
-        this.idLotPaddyTransforme = idLotPaddyTransforme;
+    public void setId(int id) {
+        this.id = id;
     }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public double getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(double quantite) {
+        this.quantite = quantite;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public List<DetailLotTransforme> getDetailLotTransforme() {
+        return detailLotTransforme;
+    }
+
+    public void setDetailLotTransforme(List<DetailLotTransforme> detailLotTransforme) {
+        this.detailLotTransforme = detailLotTransforme;
+    }
+
 }

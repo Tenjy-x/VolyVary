@@ -23,7 +23,7 @@ public class LotPaddyTransforme {
     @Column(name = "date")
     private Date date;
 
-    @OneToMany(mappedBy = "lotPaddyTransforme", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "Lot_transforme", cascade = CascadeType.ALL)
     private List<DetailLotTransforme> detailLotTransforme;
 
     public int getId() {

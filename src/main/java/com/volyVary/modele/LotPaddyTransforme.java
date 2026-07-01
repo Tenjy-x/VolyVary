@@ -14,7 +14,7 @@ public class LotPaddyTransforme {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "reference")
+    @Column(name = "reference",unique = true)
     private String reference;
 
     @Column(name = "quantite")

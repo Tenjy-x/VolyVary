@@ -10,6 +10,11 @@ public class Produit {
     @Column(name = "id_produit")
     private Integer idProduit;
 
+    @Column(name = "nom")
+    private String nomProduit;
+
+    @Column(name = "prix_unitaire")
+    private double prixUnitaire;
     public Produit() {
     }
 

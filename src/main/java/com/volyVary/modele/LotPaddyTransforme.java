@@ -1,5 +1,8 @@
 package com.volyVary.modele;
 
+import java.sql.Date;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +13,17 @@ public class LotPaddyTransforme {
     @Column(name = "id_lot_paddy_transforme")
     private int idLotPaddyTransforme;
 
-    public LotPaddyTransforme() {
-    }
+    @Column(name = "reference")
+    private String reference;
+
+    @Column(name = "quantite")
+    private double quantite;
+
+    @Column(name = "date")
+    private Date date;
+
+    @OneToMany(mappedBy = "DetailLotPaddyTransforme")
+    private List<DetailLotTransforme> detailLotTransforme;
 
     public int getidLotPaddyTransforme() {
         return idLotPaddyTransforme;

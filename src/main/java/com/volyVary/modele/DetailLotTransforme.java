@@ -26,8 +26,12 @@ public class DetailLotTransforme {
     @JoinColumn(name = "id_lot")
     private LotPaddy lot;
 
+    @Column(name = "quantite")
     private Float quantite;
+
+    @Column(name = "date")
     private LocalDate date;
+    
     public Produit getProduit() {
 
         return Produit;

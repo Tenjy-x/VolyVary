@@ -13,10 +13,15 @@
 <% 
 List<DetailLotTransforme> details = (List<DetailLotTransforme>) request.getAttribute("details");
 LotPaddyTransforme lotpaddyTransforme = (LotPaddyTransforme) request.getAttribute("lotpaddyTransforme");
+String error = (String) request.getAttribute("error");
 %>
 <h2>Transformation : Détail lot de Paddy transformé</h2>
 
 <hr>
+
+<% if (error != null) { %>
+    <p><%= error %></p>
+<% } else if (details != null && !details.isEmpty() && lotpaddyTransforme != null) { %>
 
 <table cellpadding="8">
 
@@ -92,9 +97,13 @@ LotPaddyTransforme lotpaddyTransforme = (LotPaddyTransforme) request.getAttribut
 
 <br><br>
 
-<form action="/transformation/formulaire">
+<form action="${pageContext.request.contextPath}/transformation/formulaireHistorique" method="get">
     <input type="submit" value="Retour">
 </form>
+
+<% } else { %>
+    <p>Aucun detail disponible pour cette transformation.</p>
+<% } %>
 
 </body>
 </html>

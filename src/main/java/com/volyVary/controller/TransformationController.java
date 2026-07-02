@@ -2,6 +2,7 @@ package com.volyVary.controller;
 
 import java.sql.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.volyVary.modele.LotPaddyTransforme;
-import com.volyVary.service.TransformationService;
-
-import jakarta.transaction.Transactional;
 import com.volyVary.modele.DetailLotTransforme;
 import com.volyVary.modele.LotPaddyTransforme;
-
-import java.util.List;
+import com.volyVary.service.TransformationService;
 
 @Controller
 @RequestMapping("/transformation")
@@ -31,8 +27,20 @@ public class TransformationController {
     }
 
     @GetMapping("/detailsLotPaddyTransforme")
-    public ModelAndView afficheDetailLotTransforme() {
+    public ModelAndView afficheDetailLotTransforme(@RequestParam("idLotTransforme") int idLotTransforme) {
         ModelAndView m = new ModelAndView("DetailsLotPaddy_tranforme");
+        LotPaddyTransforme lotTransforme = transformationService.getLotPaddyTransformeById(idLotTransforme);
+
+        if (lotTransforme == null) {
+            m.addObject("error", "Aucun detail trouve pour cette transformation");
+            return m;
+        }
+
+        List<DetailLotTransforme> details = transformationService.getDetailsLotTransforme(idLotTransforme);
+        m.addObject("details", details);
+        m.addObject("saisie", lotTransforme.getQuantite());
+        m.addObject("LotTouche", transformationService.getLotPaddyTouche(idLotTransforme));
+        m.addObject("lotpaddyTransforme", lotTransforme);
         return m;
     }
 

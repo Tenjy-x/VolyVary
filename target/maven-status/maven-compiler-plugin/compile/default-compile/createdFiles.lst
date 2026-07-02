@@ -15,14 +15,12 @@ com/volyVary/repository/TransformationRepository.class
 com/volyVary/dto/HistoriqueDto.class
 com/volyVary/modele/HistoriqueDistribution.class
 com/volyVary/modele/HistoriqueTransaction.class
-com/volyVary/dto/LotStockDto.class
 com/volyVary/modele/Livreur.class
+com/volyVary/dto/LotStockDto.class
 com/volyVary/service/TransformationService.class
 com/volyVary/modele/Reduction.class
 com/volyVary/modele/DetailTransaction.class
 com/volyVary/modele/TransformationModel.class
-com/volyVary/repository/DetailLotTransformeRepository.class
-com/volyVary/repository/LotPaddyRepository.class
 com/volyVary/modele/Produit.class
 com/volyVary/repository/LotPaddyRepository.class
 com/volyVary/repository/DetailLotTransformeRepository.class

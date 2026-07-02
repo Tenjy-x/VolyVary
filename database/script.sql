@@ -1,3 +1,4 @@
+-- Active: 1782977499077@@127.0.0.1@5432@voly_vary
 -- ============================================================================
 -- 1. TABLES INDÉPENDANTES (Aucune clé étrangère)
 -- ============================================================================
@@ -128,3 +129,7 @@ CREATE TABLE lot_paddy_mouvement(
     FOREIGN KEY (id_lot_paddy) REFERENCES lot_paddy(id),
     FOREIGN KEY (id_lot_transforme) REFERENCES lot_paddy_transforme(id)
 );
+
+CREATE SEQUENCE lot_paddy_reference_seq
+START WITH 1
+INCREMENT BY 1;

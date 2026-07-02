@@ -9,3 +9,5 @@ INSERT INTO produit(nom , prix_unitaire , rendement) VALUES
 ('Akofom-bary', 50 , 20),
 ('Tofom-bary' , 25 , 10),
 ('vary mandinika' , 10 , 5);
+
+INSERT INTO transformation(prix_unitaire) VALUES (100);

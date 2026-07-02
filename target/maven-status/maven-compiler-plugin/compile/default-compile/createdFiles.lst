@@ -17,7 +17,6 @@ com/volyVary/modele/HistoriqueTransaction.class
 com/volyVary/modele/Livreur.class
 com/volyVary/service/TransformationService.class
 com/volyVary/modele/Reduction.class
-com/volyVary/modele/Transformation.class
 com/volyVary/modele/DetailTransaction.class
 com/volyVary/repository/DetailLotTransformeRepository.class
 com/volyVary/repository/LotPaddyRepository.class

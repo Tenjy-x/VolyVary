@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "transformation")
-public class Transformation {
+public class TransformationModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -13,7 +13,8 @@ public class Transformation {
     @Column(name = "prix_unitaire")
     private Double prixUnitaire;
 
-    public Transformation(Integer idTransformation, double prixUnitaire) {
+    public TransformationModel(){}
+    public TransformationModel(Integer idTransformation, double prixUnitaire) {
         this.idTransformation = idTransformation;
         this.prixUnitaire = prixUnitaire;
     }

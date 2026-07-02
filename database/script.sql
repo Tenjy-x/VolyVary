@@ -37,6 +37,7 @@ CREATE TABLE transformation (
 CREATE TABLE produit (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(100),
+    rendement NUMERIC(5, 2),
     prix_unitaire NUMERIC(10, 2)
 );
 
@@ -102,7 +103,6 @@ CREATE TABLE lot_paddy_transforme (
 CREATE TABLE detail_lot_transforme (
     id SERIAL PRIMARY KEY,
     id_lot_transforme INT,
-    id_lot INT,
     id_produit INT,
     quantite NUMERIC(12, 3),
     date DATE,
@@ -113,13 +113,18 @@ CREATE TABLE detail_lot_transforme (
         REFERENCES lot_paddy_transforme(id) 
         ON DELETE CASCADE,
         
-    CONSTRAINT fk_detail_lot_paddy 
-        FOREIGN KEY (id_lot) 
-        REFERENCES lot_paddy(id) 
-        ON DELETE RESTRICT,
-        
     CONSTRAINT fk_detail_produit 
         FOREIGN KEY (id_produit) 
         REFERENCES produit(id) 
         ON DELETE RESTRICT
+);
+
+CREATE TABLE lot_paddy_mouvement(
+    id SERIAL PRIMARY KEY,
+    id_lot_paddy INT,
+    id_lot_transforme INT,
+    quantite NUMERIC(12, 3),
+    date DATE,
+    FOREIGN KEY (id_lot_paddy) REFERENCES lot_paddy(id),
+    FOREIGN KEY (id_lot_transforme) REFERENCES lot_paddy_transforme(id)
 );

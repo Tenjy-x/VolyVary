@@ -21,32 +21,35 @@ public class DetailLotTransforme {
     @ManyToOne
     @JoinColumn(name = "id_lot_transforme")
     private LotPaddyTransforme Lot_transforme;
-    
-    @ManyToOne()
-    @JoinColumn(name = "id_lot")
-    private LotPaddy lot;
 
     @Column(name = "quantite")
     private Float quantite;
 
     @Column(name = "date")
     private LocalDate date;
-    
-    public Produit getProduit() {
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Produit getProduit() {
         return Produit;
     }
 
-    public void setProduit(Produit Produit) {
-        this.Produit = Produit;
+    public void setProduit(Produit produit) {
+        Produit = produit;
     }
 
     public LotPaddyTransforme getLot_transforme() {
         return Lot_transforme;
     }
 
-    public void setLot_transforme(LotPaddyTransforme Lot_transforme) {
-        this.Lot_transforme =  Lot_transforme;
+    public void setLot_transforme(LotPaddyTransforme lot_transforme) {
+        Lot_transforme = lot_transforme;
     }
 
     public Float getQuantite() {
@@ -64,15 +67,6 @@ public class DetailLotTransforme {
     public void setDate(LocalDate date) {
         this.date = date;
     }
-
-    public DetailLotTransforme() {
-    }
-
-    public Integer getid() {
-        return id;
-    }
-
-    public void setid(int id) {
-        this.id = id;
-    }
+    
+  
 }

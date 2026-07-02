@@ -22,7 +22,7 @@ public class DetailLotTransforme {
 
     @ManyToOne
     @JoinColumn(name = "id_lot_transforme")
-    private LotPaddyTransforme Lot_transforme;
+    private LotPaddyTransforme lotTransforme;
 
     @Column(name = "quantite")
     private double quantite;
@@ -46,12 +46,12 @@ public class DetailLotTransforme {
         Produit = produit;
     }
 
-    public LotPaddyTransforme getLot_transforme() {
-        return Lot_transforme;
+    public LotPaddyTransforme getLotTransforme() {
+        return lotTransforme;
     }
 
-    public void setLot_transforme(LotPaddyTransforme lot_transforme) {
-        Lot_transforme = lot_transforme;
+    public void setLotTransforme(LotPaddyTransforme lotTransforme) {
+        this.lotTransforme = lotTransforme;
     }
 
     public double getQuantite() {

@@ -26,7 +26,7 @@ public class LotPaddyTransforme {
     @Column(name = "prix_transformation")
     private double prixTransformation;
     
-    @OneToMany(mappedBy = "Lot_transforme", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lotTransforme", cascade = CascadeType.ALL)
     private List<DetailLotTransforme> detailLotTransforme;
 
     public double getPrixTransformation() {

@@ -74,9 +74,8 @@ public class TransformationService {
             DetailLotTransforme d = new DetailLotTransforme();
             d.setProduit(produit);
 
-            LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
-            lotPaddyTransforme.setId(idLotTransformer);
-            d.setLot_transforme(lotPaddyTransforme);
+            LotPaddyTransforme lotPaddyTransforme = lotPaddyTransformeRepository.findById(idLotTransformer).orElse(null);
+            d.setLotTransforme(lotPaddyTransforme);
 
             double quantite = (produit.getRendement() * quantiteSaisie)/100;
             d.setQuantite(quantite);
@@ -161,7 +160,26 @@ public class TransformationService {
             }
         }
         insertDetailLotPaddy(t.getId(), date, quantiteSaisie);
+    }    
+
+    public List<DetailLotTransforme> getDetailsLotTransforme(int idLotTransforme) {
+        return detailLotTransformeRepository.findByLotTransformeId(idLotTransforme);
     }
 
-    
+    public int getLastLotTransformeId() {
+        LotPaddyTransforme lastLotTransforme = lotPaddyTransformeRepository.findTopByOrderByIdDesc();
+        if (lastLotTransforme != null) {
+            return lastLotTransforme.getId();
+        } else {
+            return -1; 
+        }
+    }
+
+    public LotPaddyTransforme getLotPaddyTransformeById(int id) {
+        return lotPaddyTransformeRepository.findById(id);
+    }
+
+    public List<LotPaddyMouvement> getLotPaddyTouche(int idLotTransforme) {
+        return lotPaddyMouvementRepository.findByLotPaddyTransformeId(idLotTransforme);
+    }
 }

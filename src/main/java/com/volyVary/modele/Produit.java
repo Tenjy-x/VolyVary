@@ -50,7 +50,4 @@ public class Produit {
     public void setRendement(double rendement) {
         this.rendement = rendement;
     }
-  
-
-
 }

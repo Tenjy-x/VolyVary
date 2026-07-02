@@ -40,6 +40,7 @@ public class TransformationService {
     }
 
     public Double getTotalQuantiteLotPaddyMouvement() {
-        return lotPaddyMouvementRepository.sommeQuantiteLotPaddyMouvement() != null ? lotPaddyMouvementRepository.sommeQuantiteLotPaddyMouvement() : 0.0;
+        Double total = lotPaddyMouvementRepository.sommeQuantiteLotPaddyMouvement();
+        return total != null ? total : 0.0;
     }
 }

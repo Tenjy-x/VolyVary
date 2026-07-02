@@ -1,6 +1,7 @@
 package com.volyVary.service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.volyVary.dto.LotStockDto;
+import com.volyVary.modele.DetailLotTransforme;
 import com.volyVary.modele.LotPaddy;
 import com.volyVary.modele.LotPaddyMouvement;
 import com.volyVary.modele.LotPaddyTransforme;
+import com.volyVary.modele.Produit;
 import com.volyVary.modele.TransformationModel;
 import com.volyVary.repository.DetailLotTransformeRepository;
 import com.volyVary.repository.LotPaddyMouvementRepository;
@@ -57,8 +60,30 @@ public class TransformationService {
         lotPaddyTransformeRepository.save(lotPaddyTransforme);
     }
 
-    public List<LotStockDto> listeStockPaddy(){
+    public List<LotStockDto> getlisteStockPaddy(){
         return lotPaddyMouvementRepository.getStockReelParLot();
+    }
+
+    public List<Produit> listeProduit(){
+        return produitRepository.findAll();
+    }
+
+    public void insertDetailLotPaddy(Integer idLotTransformer , Date date , double quantiteSaisie){
+        List<Produit> listeProduit =produitRepository.findAll();
+        for(Produit produit : listeProduit){
+            DetailLotTransforme d = new DetailLotTransforme();
+            d.setProduit(produit);
+
+            LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
+            lotPaddyTransforme.setId(idLotTransformer);
+            d.setLot_transforme(lotPaddyTransforme);
+
+            double quantite = (produit.getRendement() * quantiteSaisie)/100;
+            d.setQuantite(quantite);
+            d.setDate(date);
+        
+            detailLotTransformeRepository.save(d);
+        }
     }
 
     @Transactional
@@ -86,6 +111,8 @@ public class TransformationService {
         double prixUnitaire = 0.0;
         if (transformation != null && transformation.getPrixUnitaire() != 0.0) {
             prixUnitaire = transformation.getPrixUnitaire();
+        } else {
+            throw new IllegalArgumentException("prix Unitaire dans la base est introuvable");
         }
         lotPaddyTransforme.setPrixTransformation(prixUnitaire * quantiteSaisie);
 
@@ -133,5 +160,8 @@ public class TransformationService {
                 break;
             }
         }
+        insertDetailLotPaddy(t.getId(), date, quantiteSaisie);
     }
+
+    
 }

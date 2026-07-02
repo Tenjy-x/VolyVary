@@ -53,7 +53,7 @@ public class TransformationController {
             m.addObject("error", e.getMessage());
         }
         
-        m.addObject("listeStock", transformationService.listeStockPaddy());
+        m.addObject("listeStock", transformationService.getlisteStockPaddy());
         return m;
     }
 }

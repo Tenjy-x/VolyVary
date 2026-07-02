@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ page import="java.util.List" %>
+<%@ page import="com.volyVary.modele.DetailLotTransforme" %>
+<%@ page import="com.volyVary.modele.LotPaddyTransforme" %>
+<%@ page import="com.volyVary.modele.LotPaddyMouvement" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +10,10 @@
 </head>
 <body>
 
+<% 
+List<DetailLotTransforme> details = (List<DetailLotTransforme>) request.getAttribute("details");
+LotPaddyTransforme lotpaddyTransforme = (LotPaddyTransforme) request.getAttribute("lotpaddyTransforme");
+%>
 <h2>Transformation : Détail lot de Paddy transformé</h2>
 
 <hr>
@@ -15,19 +22,19 @@
 
     <tr>
         <td><b>Date :</b></td>
-        <td>14 Juin 2026 à 10 h 00</td>
+        <td><%= details.get(0).getDate() %></td>
     </tr>
 
     <tr>
         <td><b>Référence :</b></td>
-        <td>LPT001</td>
+        <td><%= details.get(0).getLotTransforme().getReference() %></td>
     </tr>
 
 </table>
 
 <br><br>
 
-<b>Quantité de Paddy :</b> 500 kg
+<b>Quantité de Paddy :</b> <%= request.getAttribute("saisie") %> kg
 
 <br><br>
 
@@ -36,36 +43,27 @@
 <br><br>
 
 <table border="1" cellpadding="10" cellspacing="0" width="350">
-
+    <%
+        for (DetailLotTransforme detail : details) {
+    %>
     <tr>
-        <td>Vary</td>
-        <td align="center">325</td>
+        <td><%= detail.getProduit().getNomProduit() %></td>
+        <td align="center"><%= detail.getQuantite() %></td>
     </tr>
 
-    <tr>
-        <td>Akofom-bary</td>
-        <td align="center">100</td>
-    </tr>
-
-    <tr>
-        <td>Tofom-bary</td>
-        <td align="center">50</td>
-    </tr>
-
-    <tr>
-        <td>Vary madinika</td>
-        <td align="center">25</td>
-    </tr>
+    <%
+        }
+    %>
 
 </table>
 
 <br><br>
 
-<b>Prix/kg pour la transformation :</b> 1 000 Ar
+<b>Prix/kg pour la transformation :</b> <%= lotpaddyTransforme.getPrixTransformation() %> Ar
 
 <br><br>
 
-<b>Montant total :</b> 500 000 Ar
+<b>Montant total :</b> <%= lotpaddyTransforme.getPrixTransformation() * (double) request.getAttribute("saisie") %> Ar
 
 <br><br><br>
 
@@ -79,22 +77,22 @@
         <th>Référence</th>
         <th>Quantité</th>
     </tr>
-
+    <%
+        List<LotPaddyMouvement> lotTouche = (List<LotPaddyMouvement>) request.getAttribute("LotTouche");
+        for (LotPaddyMouvement lot : lotTouche) {
+    %>
     <tr>
-        <td>LP001</td>
-        <td align="center">100</td>
+        <td><%= lot.getLotPaddy().getReference() %></td>
+        <td align="center"><%= lot.getQuantite() %></td>
     </tr>
 
-    <tr>
-        <td>LP002</td>
-        <td align="center">400</td>
-    </tr>
+<% } %>
 
 </table>
 
 <br><br>
 
-<form action="listeTransformation.jsp">
+<form action="/transformation/formulaire">
     <input type="submit" value="Retour">
 </form>
 

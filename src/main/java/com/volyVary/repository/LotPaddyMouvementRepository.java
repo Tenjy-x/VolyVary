@@ -35,4 +35,6 @@ public interface LotPaddyMouvementRepository extends JpaRepository<LotPaddyMouve
             """)
     List<LotStockDto> getStockReelParLot();
 
+    List<LotPaddyMouvement> findByLotPaddyTransformeId(int id);
+
 }

@@ -12,6 +12,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.volyVary.service.TransformationService;
 
+import jakarta.transaction.Transactional;
+import com.volyVary.modele.DetailLotTransforme;
+import com.volyVary.modele.LotPaddyTransforme;
+
+import java.util.List;
+
 @Controller
 @RequestMapping("/transformation")
 public class TransformationController {
@@ -44,16 +50,24 @@ public class TransformationController {
     public ModelAndView test(@RequestParam("quantite") double quantite,
                             @RequestParam("date") Date date,
                             RedirectAttributes redirectAttributes) {
-        ModelAndView m = new ModelAndView("formulaireAjout");
+        ModelAndView m = new ModelAndView("DetailsLotPaddy_tranforme");
+        ModelAndView retour = new ModelAndView("formulaireAjout");
         try{
             transformationService.transformation(quantite, date);
             redirectAttributes.addFlashAttribute("success", "Transformation ajoute");
 
         } catch(IllegalArgumentException e){
-            m.addObject("error", e.getMessage());
+            retour.addObject("listeStock", transformationService.getlisteStockPaddy());
+            retour.addObject("error", e.getMessage());
+            return retour;
         }
-        
+        LotPaddyTransforme lastLotTransforme = transformationService.getLotPaddyTransformeById(transformationService.getLastLotTransformeId());
+        List<DetailLotTransforme> details = transformationService.getDetailsLotTransforme(transformationService.getLastLotTransformeId());
         m.addObject("listeStock", transformationService.getlisteStockPaddy());
+        m.addObject("saisie", quantite);
+        m.addObject("details", details);
+        m.addObject("LotTouche", transformationService.getLotPaddyTouche(lastLotTransforme.getId()));
+        m.addObject("lotpaddyTransforme" , lastLotTransforme);
         return m;
     }
 }

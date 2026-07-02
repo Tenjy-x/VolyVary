@@ -10,4 +10,7 @@ import com.volyVary.modele.LotPaddyTransforme;
 public interface LotPaddyTransformeRepository extends JpaRepository<LotPaddyTransforme, Integer>{
     @Query(value = "SELECT nextval('lot_paddy_reference_seq')", nativeQuery = true)
     String getNextReference();
+
+    LotPaddyTransforme findTopByOrderByIdDesc();
+    LotPaddyTransforme findById(int id);
 }

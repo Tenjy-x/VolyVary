@@ -35,7 +35,8 @@ public class TransformationService {
     }
 
     public Double getTotalQuantiteLotPaddy() {
-        return lotPaddyRepository.sommeQuantite();
+        Double total = lotPaddyRepository.sommeQuantite();
+        return total != null ? total : 0.0;
     }
 
     public Double getTotalQuantiteLotPaddyMouvement() {

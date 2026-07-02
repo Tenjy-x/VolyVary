@@ -1,8 +1,6 @@
 package com.volyVary.service;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,33 +58,72 @@ public class TransformationService {
         lotPaddyTransformeRepository.save(lotPaddyTransforme);
     }
 
-    public List<LotStockDto> getlisteStockPaddy(){
+    public List<LotStockDto> getlisteStockPaddy() {
         return lotPaddyMouvementRepository.getStockReelParLot();
     }
 
-    public List<Produit> listeProduit(){
+    public List<Produit> listeProduit() {
         return produitRepository.findAll();
     }
 
-    public void insertDetailLotPaddy(Integer idLotTransformer , Date date , double quantiteSaisie){
-        List<Produit> listeProduit =produitRepository.findAll();
-        for(Produit produit : listeProduit){
+    public List<LotPaddyTransforme> listeHistorique() {
+        return lotPaddyTransformeRepository.findAll();
+    }
+
+    public TransformationModel getTransformation() {
+        return transformationRepository.findTopByOrderByIdTransformationDesc();
+    }
+
+    public Double totalPaddyTransformer() {
+        return lotPaddyTransformeRepository.quantiteTotalTransformer();
+    }
+
+    public Double totalPaddyTransformer(List<LotPaddyTransforme> liste) {
+        double total = 0.0;
+        for (LotPaddyTransforme lotPaddyTransforme : liste) {
+            total += lotPaddyTransforme.getQuantite();
+        }
+        return total;
+    }
+
+    public List<LotPaddyTransforme> filtrePaddyTransforme(Date debut, Date fin) {
+        Date dateDebut = debut != null ? debut : null;
+        Date dateFin = fin != null ? fin : null;
+
+        if (dateDebut != null && dateFin != null) {
+            return lotPaddyTransformeRepository.findByDateBetween(dateDebut, dateFin);
+        }
+
+        if (dateDebut != null) {
+            return lotPaddyTransformeRepository.findByDateGreaterThanEqual(dateDebut);
+        }
+
+        if (dateFin != null) {
+            return lotPaddyTransformeRepository.findByDateLessThanEqual(dateFin);
+        }
+
+        return List.of();
+    }
+
+    public void insertDetailLotPaddy(Integer idLotTransformer, Date date, double quantiteSaisie) {
+        List<Produit> listeProduit = produitRepository.findAll();
+        for (Produit produit : listeProduit) {
             DetailLotTransforme d = new DetailLotTransforme();
             d.setProduit(produit);
 
             LotPaddyTransforme lotPaddyTransforme = lotPaddyTransformeRepository.findById(idLotTransformer).orElse(null);
             d.setLotTransforme(lotPaddyTransforme);
 
-            double quantite = (produit.getRendement() * quantiteSaisie)/100;
+            double quantite = (produit.getRendement() * quantiteSaisie) / 100;
             d.setQuantite(quantite);
             d.setDate(date);
-        
+
             detailLotTransformeRepository.save(d);
         }
     }
 
     @Transactional
-    public void transformation(Double quantiteSaisie, Date date)throws IllegalArgumentException {
+    public void transformation(Double quantiteSaisie, Date date) throws IllegalArgumentException {
         if (quantiteSaisie == null || quantiteSaisie <= 0) {
             throw new IllegalArgumentException("quantiteSaisie invalide");
         }
@@ -104,7 +141,7 @@ public class TransformationService {
         LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
         lotPaddyTransforme.setDate(date);
         lotPaddyTransforme.setQuantite(quantiteSaisie);
-       
+
         lotPaddyTransforme.setReference(String.format("LPT%04d", seq));
 
         double prixUnitaire = 0.0;
@@ -129,13 +166,13 @@ public class TransformationService {
         double suivieQuantite = quantiteSaisie;
 
         for (LotStockDto l : listeDto) {
-            if (suivieQuantite <= 0) break;
+            if (suivieQuantite <= 0)
+                break;
 
             LotPaddyMouvement m = new LotPaddyMouvement();
             m.setDate(date);
             m.setLotPaddyTransforme(t);
 
-          
             LotPaddy lotPaddy = lotPaddyRepository.findById(l.getIdLot()).orElse(null);
             if (lotPaddy == null) {
                 continue;

@@ -1,6 +1,7 @@
 package com.volyVary.controller;
 
 import java.sql.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.volyVary.modele.LotPaddyTransforme;
 import com.volyVary.service.TransformationService;
 
 import jakarta.transaction.Transactional;
@@ -40,7 +42,7 @@ public class TransformationController {
         return m;
     }
 
-    @GetMapping("/formulaire")
+    @GetMapping("/formulaireAjoutTransformation")
     public ModelAndView afficheFormulaire() {
         ModelAndView m = new ModelAndView("formulaireAjout");
         return m;
@@ -70,4 +72,34 @@ public class TransformationController {
         m.addObject("lotpaddyTransforme" , lastLotTransforme);
         return m;
     }
+
+    @GetMapping("/formulaireHistorique")
+    public ModelAndView afficheFormulaireHistorique(){
+        ModelAndView m = new ModelAndView("LotPaddy_transforme");
+        m.addObject("transformation", transformationService.getTransformation());
+        m.addObject("lotPaddyTransforme", transformationService.listeHistorique());
+        m.addObject("total", transformationService.totalPaddyTransformer());
+        return m;
+    }
+
+    @PostMapping("/traitementFiltre")
+    public ModelAndView traitementFiltre(@RequestParam(value = "debut", required = false) String debut,
+                                         @RequestParam(value = "fin", required = false) String fin){
+        Date dateDebut = (debut == null || debut.isBlank()) ? null : Date.valueOf(debut);
+        Date dateFin = (fin == null || fin.isBlank()) ? null : Date.valueOf(fin);
+
+        ModelAndView m = new ModelAndView("LotPaddy_transforme");
+        List<LotPaddyTransforme> resultatFiltre = transformationService.filtrePaddyTransforme(dateDebut, dateFin);
+        if (dateDebut == null && dateFin == null) {
+            m.addObject("message", "aucun resultat trouver");
+        } else if (resultatFiltre.isEmpty()) {
+            m.addObject("message", "aucun resultat trouver");
+        }
+        m.addObject("transformation", transformationService.getTransformation());
+        m.addObject("lotPaddyTransforme", resultatFiltre);
+        m.addObject("total", transformationService.totalPaddyTransformer(resultatFiltre));
+        return m;                                
+    }
+
+   
 }

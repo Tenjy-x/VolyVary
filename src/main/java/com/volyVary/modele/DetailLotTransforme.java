@@ -2,6 +2,8 @@ package com.volyVary.modele;
 
 
 import jakarta.persistence.*;
+
+import java.sql.Date;
 import java.time.LocalDate;
 
 import com.volyVary.modele.Produit;
@@ -23,10 +25,10 @@ public class DetailLotTransforme {
     private LotPaddyTransforme Lot_transforme;
 
     @Column(name = "quantite")
-    private Float quantite;
+    private double quantite;
 
     @Column(name = "date")
-    private LocalDate date;
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -52,19 +54,19 @@ public class DetailLotTransforme {
         Lot_transforme = lot_transforme;
     }
 
-    public Float getQuantite() {
+    public double getQuantite() {
         return quantite;
     }
 
-    public void setQuantite(Float quantite) {
+    public void setQuantite(double quantite) {
         this.quantite = quantite;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
     

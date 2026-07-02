@@ -130,6 +130,6 @@ CREATE TABLE lot_paddy_mouvement(
     FOREIGN KEY (id_lot_transforme) REFERENCES lot_paddy_transforme(id)
 );
 
--- CREATE SEQUENCE lot_paddy_reference_seq
--- START WITH 1
--- INCREMENT BY 1;
+CREATE SEQUENCE lot_paddy_reference_seq
+START WITH 1
+INCREMENT BY 1;

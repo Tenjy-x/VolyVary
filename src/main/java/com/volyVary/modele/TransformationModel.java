@@ -14,10 +14,6 @@ public class TransformationModel {
     private Double prixUnitaire;
 
     public TransformationModel(){}
-    public TransformationModel(Integer idTransformation, double prixUnitaire) {
-        this.idTransformation = idTransformation;
-        this.prixUnitaire = prixUnitaire;
-    }
 
     public Integer getIdTransformation() {
         return idTransformation;

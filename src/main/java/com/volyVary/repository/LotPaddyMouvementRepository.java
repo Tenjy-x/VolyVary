@@ -8,6 +8,6 @@ import com.volyVary.modele.LotPaddyMouvement;
 
 @Repository
 public interface LotPaddyMouvementRepository extends JpaRepository<LotPaddyMouvement , Integer>{
-    @Query("SELECT SUM(l.quantite) FROM lot_paddy_mouvement l")
+    @Query("SELECT COALESCE(SUM(l.quantite), 0.0) FROM LotPaddyMouvement l")
     Double sommeQuantiteLotPaddyMouvement();
 }

@@ -11,7 +11,7 @@ public class Transformation {
     private Integer idTransformation;
 
     @Column(name = "prix_unitaire")
-    private double prixUnitaire;
+    private Double prixUnitaire;
 
     public Transformation(Integer idTransformation, double prixUnitaire) {
         this.idTransformation = idTransformation;

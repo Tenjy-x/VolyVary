@@ -28,6 +28,7 @@ public class TransformationService {
 
     @Autowired
     private ProduitRepository produitRepository;
+    
     @Autowired
     private TransformationRepository transformationRepository;
 
@@ -41,23 +42,23 @@ public class TransformationService {
         this.transformationRepository = transformationRepository;
     }
 
-    @Transactional
-    public void transformation(double quantiteSaisie , Date date){
-        double prixTransformation = transformationRepository.getTransformationPrix();
-        String reference = lotPaddyTransformeRepository.getNextReference();
+    // @Transactional
+    // public void transformation(double quantiteSaisie , Date date){
+    //     double prixTransformation = transformationRepository.getTransformationPrix();
+    //     String reference = lotPaddyTransformeRepository.getNextReference();
 
-        LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
-        lotPaddyTransforme.setDate(date);
-        lotPaddyTransforme.setQuantite(quantiteSaisie);
-        lotPaddyTransforme.setReference(String.format("LTP%4", reference));
-        lotPaddyTransforme.setPrixTransformation(prixTransformation * quantiteSaisie);
+    //     LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
+    //     lotPaddyTransforme.setDate(date);
+    //     lotPaddyTransforme.setQuantite(quantiteSaisie);
+    //     lotPaddyTransforme.setReference(String.format("LTP%4", reference));
+    //     lotPaddyTransforme.setPrixTransformation(prixTransformation * quantiteSaisie);
 
-        //Save de la transformation
-        lotPaddyTransformeRepository.save(lotPaddyTransforme);
+    //     //Save de la transformation
+    //     lotPaddyTransformeRepository.save(lotPaddyTransforme);
 
-        //total stock paddy
+    //     //total stock paddy
     
 
-    }
+    // }
     
 }

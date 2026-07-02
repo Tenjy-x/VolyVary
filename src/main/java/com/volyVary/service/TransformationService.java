@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.tomcat.websocket.Transformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,61 +62,76 @@ public class TransformationService {
     }
 
     @Transactional
-    public void transformation(Double quantiteSaisie, Date date) {
-        TransformationModel transfomration = transformationRepository.findTopByOrderByIdTransformationDesc();
-        String reference = lotPaddyTransformeRepository.getNextReference();
+    public void transformation(Double quantiteSaisie, Date date)throws IllegalArgumentException {
+        if (quantiteSaisie == null || quantiteSaisie <= 0) {
+            throw new IllegalArgumentException("quantiteSaisie invalide");
+        }
+
+        TransformationModel transformation = transformationRepository.findTopByOrderByIdTransformationDesc();
+
+        String referenceSeq = lotPaddyTransformeRepository.getNextReference();
+        int seq = 0;
+        try {
+            seq = Integer.parseInt(referenceSeq);
+        } catch (NumberFormatException e) {
+            seq = 0;
+        }
 
         LotPaddyTransforme lotPaddyTransforme = new LotPaddyTransforme();
         lotPaddyTransforme.setDate(date);
         lotPaddyTransforme.setQuantite(quantiteSaisie);
-        lotPaddyTransforme.setReference(
-                String.format("LTP%04d", Integer.parseInt(reference)));
-        lotPaddyTransforme.setPrixTransformation(transfomration.getPrixUnitaire() * quantiteSaisie);
+       
+        lotPaddyTransforme.setReference(String.format("LPT%04d", seq));
 
-        // Save de la transformation
-        // lotPaddyTransformeRepository.save(lotPaddyTransforme);
-
-        // total stock paddy
-        LotPaddyTransforme t = lotPaddyTransformeRepository.save(lotPaddyTransforme);
-        double total = lotPaddyRepository.sommeQuantite() - lotPaddyMouvementRepository.getStockPaddy();
-
-        if (quantiteSaisie >= total) {
-            
+        double prixUnitaire = 0.0;
+        if (transformation != null && transformation.getPrixUnitaire() != 0.0) {
+            prixUnitaire = transformation.getPrixUnitaire();
         }
+        lotPaddyTransforme.setPrixTransformation(prixUnitaire * quantiteSaisie);
+
+        LotPaddyTransforme t = lotPaddyTransformeRepository.save(lotPaddyTransforme);
+
+        Double somme = lotPaddyRepository.sommeQuantite();
+        Double stockMouv = lotPaddyMouvementRepository.getStockPaddy();
+        double total = (somme != null ? somme : 0.0) - (stockMouv != null ? stockMouv : 0.0);
+
+        if (quantiteSaisie > total) {
+            throw new IllegalArgumentException("Stock insuffisant pour la transformation demandee");
+        }
+
         List<LotStockDto> listeDto = lotPaddyMouvementRepository.getStockReelParLot();
         double suivieQuantite = quantiteSaisie;
 
-        
         for (LotStockDto l : listeDto) {
+            if (suivieQuantite <= 0) break;
+
             LotPaddyMouvement m = new LotPaddyMouvement();
             m.setDate(date);
-    
             m.setLotPaddyTransforme(t);
-    
-            LotPaddy lotPaddy = new LotPaddy();
-            lotPaddy.setIdLotPaddy(l.getIdLot());
 
+          
+            LotPaddy lotPaddy = lotPaddyRepository.findById(l.getIdLot()).orElse(null);
+            if (lotPaddy == null) {
+                continue;
+            }
             m.setLotPaddy(lotPaddy);
 
-            if (suivieQuantite != 0) {
-                if (l.getQuantiteReel() < suivieQuantite) {
-                    suivieQuantite -= l.getQuantiteReel();
-                    m.setQuantite(l.getQuantiteReel());
-                    // l.setQuantiteReel(suivieQuantite);
-                    lotPaddyMouvementRepository.save(m);
-                }
+            double quantiteReel = l.getQuantiteReel();
 
-                if (l.getQuantiteReel() >= suivieQuantite) {
-                    double value = l.getQuantiteReel();
-                    value -= suivieQuantite;
-                    m.setQuantite(suivieQuantite);
-                    lotPaddyMouvementRepository.save(m);
-                    // l.setQuantiteReel(value);
-                }
+            if (quantiteReel <= 0) {
+                continue;
+            }
+
+            if (quantiteReel < suivieQuantite) {
+                m.setQuantite(quantiteReel);
+                suivieQuantite -= quantiteReel;
+                lotPaddyMouvementRepository.save(m);
+            } else {
+                m.setQuantite(suivieQuantite);
+                lotPaddyMouvementRepository.save(m);
+                suivieQuantite = 0;
+                break;
             }
         }
-
-      
-
     }
 }

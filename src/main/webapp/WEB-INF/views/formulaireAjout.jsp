@@ -3,10 +3,19 @@
 <%@ page import ="com.volyVary.dto.*" %>
 <% List<LotStockDto> listeDto = (List<LotStockDto>) request.getAttribute("listeStock"); %>
 
+<% String error = (String) request.getAttribute("error"); %>
+<% String success = (String) request.getAttribute("success");%>
+
+<% if(success != null) {%>
+    <p style="color:green"><%= success%></p>
+<% } %>
+<% if(error != null) {%>
+    <p style="color:red"><%= error%></p>
+<% } %>
     <h1>Formulaire ajout</h1>
     <form action="/transformation/traitementAjout" method="post">
-        <input type="date" name="date">
-        <input type="number" name="quantite">
+        <input type="date" name="date" required>
+        <input type="number" name="quantite" required>
         <input type="submit" value="Valider">
     </form>
 

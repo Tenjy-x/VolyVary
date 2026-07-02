@@ -75,8 +75,8 @@
             <td><%= t.getPrixUnitaire()%></td>
             <td><%= l.getPrixTransformation()%></td>
             <td>
-                <form action="" method="post">
-                    <input type="hidden" name="reference" value="<%= l.getReference()%>">
+                <form action="${pageContext.request.contextPath}/transformation/detailsLotPaddyTransforme" method="get">
+                    <input type="hidden" name="idLotTransforme" value="<%= l.getId()%>">
                     <input type="submit" value="Voir détail">
                 </form>
             </td>

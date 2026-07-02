@@ -23,9 +23,7 @@ public class TransformationService {
     @Autowired
     private ProduitRepository produitRepository;
 
-    @Autowired
-    private LotPaddyMouvementRepository lotPaddyMouvementRepository;
-
+    private final LotPaddyMouvementRepository lotPaddyMouvementRepository;
     public TransformationService(DetailLotTransformeRepository detailLotTransformeRepository,
             LotPaddyRepository lotPaddyRepository, LotPaddyTransformeRepository lotPaddyTransformeRepository,
             ProduitRepository produitRepository, LotPaddyMouvementRepository lotPaddyMouvementRepository) {

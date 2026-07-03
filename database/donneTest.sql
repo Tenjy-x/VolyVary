@@ -1,8 +1,16 @@
 INSERT INTO lot_paddy (reference , quantite) VALUES
-('LP001' , 15),
-('LP002' , 20),
-('LP003' , 10),
-('LP004' , 5);
+('LP001' , 50),
+('LP002' , 19),
+('LP003' , 60),
+('LP004' , 50),
+('LP005' , 50),
+('LP006' , 19),
+('LP007' , 60),
+('LP008' , 50),
+('LP009' , 50),
+('LP010' , 19),
+('LP011' , 60),
+('LP012' , 50);
 
 INSERT INTO produit(nom , prix_unitaire , rendement) VALUES
 ('Vary' , 100 , 65),

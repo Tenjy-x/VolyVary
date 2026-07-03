@@ -20,6 +20,8 @@ import com.volyVary.repository.LotPaddyTransformeRepository;
 import com.volyVary.repository.ProduitRepository;
 import com.volyVary.repository.TransformationRepository;
 
+
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -219,4 +221,6 @@ public class TransformationService {
     public List<LotPaddyMouvement> getLotPaddyTouche(int idLotTransforme) {
         return lotPaddyMouvementRepository.findByLotPaddyTransformeId(idLotTransforme);
     }
+
+
 }

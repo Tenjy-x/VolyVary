@@ -98,7 +98,13 @@ String error = (String) request.getAttribute("error");
 <br><br>
 
 <form action="${pageContext.request.contextPath}/transformation/formulaireHistorique" method="get">
-    <input type="submit" value="Retour">
+    <input type="submit" value="Voir la Liste des transformations">
+</form>
+<form action="${pageContext.request.contextPath}/transformation/formulaireAjoutTransformation" method="get">
+    <input type="submit" value="Ajouter une nouvelle transformation">
+</form>
+<form action="${pageContext.request.contextPath}/transformation/pdf/<%= lotpaddyTransforme.getId() %>" method="get">
+    <button>Exporter PDF</button>
 </form>
 
 <% } else { %>

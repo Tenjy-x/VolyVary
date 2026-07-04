@@ -14,7 +14,7 @@
 <% } %>
     <h1>Formulaire ajout</h1>
     <form action="/transformation/traitementAjout" method="post">
-        <input type="datetime-local" name="date" required>
+        <input type="datetime-local" name="date" step="60" required>
         <input type="number" name="quantite" required>
         <input type="submit" value="Valider">
     </form>

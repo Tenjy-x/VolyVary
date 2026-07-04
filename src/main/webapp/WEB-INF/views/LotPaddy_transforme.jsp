@@ -7,7 +7,7 @@
 <% TransformationModel t = (TransformationModel) request.getAttribute("transformation");%>
 <% double totalPaddyTransformer = (double) request.getAttribute("total");%>
 <% String message = (String) request.getAttribute("message");%>
-
+<% String testPaddyTransformer = (String) request.getAttribute("lotPaddyVide");%>
 
 <!DOCTYPE html>
 <html>
@@ -17,8 +17,8 @@
 <body>
 <h1>Liste des lots de paddy</h1>
 <form action="${pageContext.request.contextPath}/transformation/traitementFiltre" method="post">
-    <p>date debut :<input type="date" name="debut" ></p>
-    <p>date fin :<input type="date" name="fin" ></p>
+    <p>date debut :<input type="datetime-local" name="debut" ></p>
+    <p>date fin :<input type="datetime-local" name="fin" ></p>
     <input type="submit" value="Filtrer">
 </form>
     <table width="80%">
@@ -30,9 +30,11 @@
                     <br><br>
                         Quantité de lot de paddy transformé
                     <br><br>
-
-                    <b><%= totalPaddyTransformer%></b>
-
+                    <% if(totalPaddyTransformer != 0) {%>
+                        <b><%= totalPaddyTransformer%></b>
+                    <% } else { %>
+                        <b><%= testPaddyTransformer%></b>
+                     <% } %>
                 </fieldset>
             </td>
 

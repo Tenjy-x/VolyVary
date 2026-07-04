@@ -18,9 +18,6 @@ import java.awt.Color;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -28,9 +25,10 @@ import com.volyVary.modele.DetailLotTransforme;
 import com.volyVary.modele.LotPaddyTransforme;
 import com.volyVary.service.TransformationService;
 
-import com.lowagie.text.Document;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -105,18 +103,28 @@ public class TransformationController {
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
         m.addObject("transformation", transformationService.getTransformation());
         m.addObject("lotPaddyTransforme", transformationService.listeHistorique());
-        m.addObject("total", transformationService.totalPaddyTransformer());
+        Double total = transformationService.totalPaddyTransformer();
+        if (total == null) {
+            m.addObject("lotPaddyVide", "aucun paddy transformer");
+        } else {
+            m.addObject("total", transformationService.totalPaddyTransformer());
+        }
+
         return m;
     }
 
     @PostMapping("/traitementFiltre")
     public ModelAndView traitementFiltre(@RequestParam(value = "debut", required = false) String debut,
             @RequestParam(value = "fin", required = false) String fin) {
-        Date dateDebut = (debut == null || debut.isBlank()) ? null : Date.valueOf(debut);
-        Date dateFin = (fin == null || fin.isBlank()) ? null : Date.valueOf(fin);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        LocalDateTime dateDebut = (debut == null || debut.isBlank()) ? null : LocalDateTime.parse(debut, formatter);
+
+        LocalDateTime dateFin = (fin == null || fin.isBlank()) ? null : LocalDateTime.parse(fin, formatter);
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
         List<LotPaddyTransforme> resultatFiltre = transformationService.filtrePaddyTransforme(dateDebut, dateFin);
+        
         if (dateDebut == null && dateFin == null) {
             m.addObject("message", "aucun resultat trouver");
         } else if (resultatFiltre.isEmpty()) {
@@ -165,7 +173,7 @@ public class TransformationController {
         // ===== Informations =====
         PdfPTable info = new PdfPTable(2);
         info.setWidthPercentage(100);
-        info.setWidths(new int[]{35,65});
+        info.setWidths(new int[] { 35, 65 });
 
         info.addCell(new Phrase("Date", gras));
         info.addCell(new Phrase(details.get(0).getDate().toString(), normal));
@@ -185,7 +193,7 @@ public class TransformationController {
         // ===== Tableau des produits =====
         PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{70,30});
+        table.setWidths(new int[] { 70, 30 });
 
         // Entêtes
         PdfPCell cell1 = new PdfPCell(new Phrase("Produit", gras));

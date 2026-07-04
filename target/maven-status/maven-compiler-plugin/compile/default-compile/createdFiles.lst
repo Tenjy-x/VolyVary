@@ -21,6 +21,8 @@ com/volyVary/service/TransformationService.class
 com/volyVary/modele/Reduction.class
 com/volyVary/modele/DetailTransaction.class
 com/volyVary/modele/TransformationModel.class
+com/volyVary/repository/DetailLotTransformeRepository.class
+com/volyVary/repository/LotPaddyRepository.class
 com/volyVary/modele/Produit.class
 com/volyVary/modele/Commune.class
 com/volyVary/modele/StatutTransaction.class

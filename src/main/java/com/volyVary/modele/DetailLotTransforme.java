@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import com.volyVary.modele.Produit;
 
 @Entity
@@ -28,7 +28,7 @@ public class DetailLotTransforme {
     private double quantite;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     public Integer getId() {
         return id;
@@ -62,11 +62,11 @@ public class DetailLotTransforme {
         this.quantite = quantite;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
     

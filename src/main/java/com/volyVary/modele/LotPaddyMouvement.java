@@ -1,6 +1,7 @@
 package com.volyVary.modele;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "lot_paddy_mouvement")
@@ -31,7 +33,7 @@ public class LotPaddyMouvement {
     private double quantite;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     public int getId() {
         return id;
@@ -65,11 +67,11 @@ public class LotPaddyMouvement {
         this.quantite = quantite;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

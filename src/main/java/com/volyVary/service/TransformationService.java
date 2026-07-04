@@ -20,7 +20,7 @@ import com.volyVary.repository.LotPaddyTransformeRepository;
 import com.volyVary.repository.ProduitRepository;
 import com.volyVary.repository.TransformationRepository;
 
-
+import java.time.LocalDateTime;
 
 import jakarta.transaction.Transactional;
 
@@ -107,7 +107,7 @@ public class TransformationService {
         return List.of();
     }
 
-    public void insertDetailLotPaddy(Integer idLotTransformer, Date date, double quantiteSaisie) {
+    public void insertDetailLotPaddy(Integer idLotTransformer, LocalDateTime date, double quantiteSaisie) {
         List<Produit> listeProduit = produitRepository.findAll();
         for (Produit produit : listeProduit) {
             DetailLotTransforme d = new DetailLotTransforme();
@@ -125,7 +125,7 @@ public class TransformationService {
     }
 
     @Transactional
-    public void transformation(Double quantiteSaisie, Date date) throws IllegalArgumentException {
+    public void transformation(Double quantiteSaisie, LocalDateTime date) throws IllegalArgumentException {
         if (quantiteSaisie == null || quantiteSaisie <= 0) {
             throw new IllegalArgumentException("quantiteSaisie invalide");
         }

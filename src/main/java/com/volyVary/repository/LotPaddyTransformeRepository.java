@@ -1,6 +1,7 @@
 package com.volyVary.repository;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,10 +22,12 @@ public interface LotPaddyTransformeRepository extends JpaRepository<LotPaddyTran
     @Query("SELECT SUM(l.quantite) FROM LotPaddyTransforme l")
     double quantiteTotalTransformer();
 
-    List<LotPaddyTransforme> findByDateBetween(Date debut, Date fin);
+    List<LotPaddyTransforme> findByDateBetween(LocalDateTime debut, LocalDateTime fin);
 
-    List<LotPaddyTransforme> findByDateGreaterThanEqual(Date debut);
+    List<LotPaddyTransforme> findByDateGreaterThanEqual(LocalDateTime debut);
 
-    List<LotPaddyTransforme> findByDateLessThanEqual(Date fin);
+    List<LotPaddyTransforme> findByDateLessThanEqual(LocalDateTime fin);
 
-}
+    List<LotPaddyTransforme> findByDate(LocalDateTime date);
+
+}   

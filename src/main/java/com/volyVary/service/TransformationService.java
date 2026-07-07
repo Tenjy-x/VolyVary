@@ -88,9 +88,9 @@ public class TransformationService {
         return total;
     }
 
-    public List<LotPaddyTransforme> filtrePaddyTransforme(Date debut, Date fin) {
-        Date dateDebut = debut != null ? debut : null;
-        Date dateFin = fin != null ? fin : null;
+    public List<LotPaddyTransforme> filtrePaddyTransforme(LocalDateTime debut, LocalDateTime fin) {
+        LocalDateTime dateDebut = debut != null ? debut : null;
+        LocalDateTime dateFin = fin != null ? fin : null;
 
         if (dateDebut != null && dateFin != null) {
             return lotPaddyTransformeRepository.findByDateBetween(dateDebut, dateFin);

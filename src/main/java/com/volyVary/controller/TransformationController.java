@@ -30,6 +30,7 @@ import com.volyVary.service.TransformationService;
 
 import com.lowagie.text.Document;
 
+import java.time.LocalDateTime;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -74,7 +75,7 @@ public class TransformationController {
 
     @PostMapping("/traitementAjout")
     public ModelAndView test(@RequestParam("quantite") double quantite,
-            @RequestParam("date") Date date,
+            @RequestParam("date") LocalDateTime date,
             RedirectAttributes redirectAttributes) {
         ModelAndView m = new ModelAndView("DetailsLotPaddy_tranforme");
         ModelAndView retour = new ModelAndView("formulaireAjout");

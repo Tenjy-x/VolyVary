@@ -2,7 +2,7 @@ package com.volyVary.modele;
 
 import java.sql.Date;
 import java.util.List;
-
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,7 +21,7 @@ public class LotPaddyTransforme {
     private double quantite;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     @Column(name = "prix_transformation")
     private double prixTransformation;
@@ -61,11 +61,11 @@ public class LotPaddyTransforme {
         this.quantite = quantite;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

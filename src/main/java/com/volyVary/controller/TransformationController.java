@@ -68,6 +68,7 @@ public class TransformationController {
     @GetMapping("/formulaireAjoutTransformation")
     public ModelAndView afficheFormulaire() {
         ModelAndView m = new ModelAndView("formulaireAjout");
+        m.addObject("listeStock", transformationService.getlisteStockPaddy());
         return m;
     }
 

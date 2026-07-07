@@ -59,11 +59,11 @@ public class TransformationController {
         return m;
     }
 
-    @GetMapping("/lotPaddyTransforme")
-    public ModelAndView afficheLotTransforme() {
-        ModelAndView m = new ModelAndView("LotPaddy_tranforme");
-        return m;
-    }
+    // @GetMapping("/lotPaddyTransforme")
+    // public ModelAndView afficheLotTransforme() {
+    //     ModelAndView m = new ModelAndView("LotPaddy_tranforme");
+    //     return m;
+    // }
 
     @GetMapping("/formulaireAjoutTransformation")
     public ModelAndView afficheFormulaire() {
@@ -99,7 +99,7 @@ public class TransformationController {
         return m;
     }
 
-    @GetMapping("/formulaireHistorique")
+    @GetMapping("/lotPaddyTransforme")
     public ModelAndView afficheFormulaireHistorique() {
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
         m.addObject("transformation", transformationService.getTransformation());

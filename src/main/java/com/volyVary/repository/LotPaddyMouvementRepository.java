@@ -21,7 +21,8 @@ public interface LotPaddyMouvementRepository extends JpaRepository<LotPaddyMouve
     @Query("""
             SELECT new com.volyVary.dto.LotStockDto(
                 l.idLotPaddy,
-                (l.quantite - COALESCE(m.totalMouvement, 0.0))
+                (l.quantite - COALESCE(m.totalMouvement, 0.0)),
+                l.reference
             )
             FROM LotPaddy l
             LEFT JOIN (
@@ -29,9 +30,9 @@ public interface LotPaddyMouvementRepository extends JpaRepository<LotPaddyMouve
                        SUM(m.quantite) AS totalMouvement
                 FROM LotPaddyMouvement m
                 GROUP BY m.lotPaddy.idLotPaddy
-                
             ) m ON m.idLot = l.idLotPaddy
-             ORDER BY l.idLotPaddy
+            WHERE (l.quantite - COALESCE(m.totalMouvement, 0.0)) > 0
+            ORDER BY l.idLotPaddy
             """)
     List<LotStockDto> getStockReelParLot();
 

@@ -2,10 +2,10 @@ package com.volyVary.service;
 
 import java.sql.Date;
 import java.util.List;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.volyVary.dto.LotStockDto;
 import com.volyVary.modele.DetailLotTransforme;
 import com.volyVary.modele.LotPaddy;
@@ -88,23 +88,27 @@ public class TransformationService {
         return total;
     }
 
-    public List<LotPaddyTransforme> filtrePaddyTransforme(LocalDateTime debut, LocalDateTime fin) {
-        LocalDateTime dateDebut = debut != null ? debut : null;
-        LocalDateTime dateFin = fin != null ? fin : null;
+    public Page<LotPaddyTransforme> filtrePaddyTransforme(
+            LocalDateTime debut,
+            LocalDateTime fin,
+            Pageable pageable) {
 
-        if (dateDebut != null && dateFin != null) {
-            return lotPaddyTransformeRepository.findByDateBetween(dateDebut, dateFin);
+        if (debut != null && fin != null) {
+            return lotPaddyTransformeRepository
+                    .findByDateBetween(debut, fin, pageable);
         }
 
-        if (dateDebut != null) {
-            return lotPaddyTransformeRepository.findByDateGreaterThanEqual(dateDebut);
+        if (debut != null) {
+            return lotPaddyTransformeRepository
+                    .findByDateGreaterThanEqual(debut, pageable);
         }
 
-        if (dateFin != null) {
-            return lotPaddyTransformeRepository.findByDateLessThanEqual(dateFin);
+        if (fin != null) {
+            return lotPaddyTransformeRepository
+                    .findByDateLessThanEqual(fin, pageable);
         }
 
-        return List.of();
+        return lotPaddyTransformeRepository.findAll(pageable);
     }
 
     public void insertDetailLotPaddy(Integer idLotTransformer, LocalDateTime date, double quantiteSaisie) {
@@ -113,7 +117,8 @@ public class TransformationService {
             DetailLotTransforme d = new DetailLotTransforme();
             d.setProduit(produit);
 
-            LotPaddyTransforme lotPaddyTransforme = lotPaddyTransformeRepository.findById(idLotTransformer).orElse(null);
+            LotPaddyTransforme lotPaddyTransforme = lotPaddyTransformeRepository.findById(idLotTransformer)
+                    .orElse(null);
             d.setLotTransforme(lotPaddyTransforme);
 
             double quantite = (produit.getRendement() * quantiteSaisie) / 100;
@@ -122,6 +127,10 @@ public class TransformationService {
 
             detailLotTransformeRepository.save(d);
         }
+    }
+
+    public Page<LotPaddyTransforme> getAll(Pageable pageable) {
+        return lotPaddyTransformeRepository.findAll(pageable);
     }
 
     @Transactional
@@ -199,7 +208,7 @@ public class TransformationService {
             }
         }
         insertDetailLotPaddy(t.getId(), date, quantiteSaisie);
-    }    
+    }
 
     public List<DetailLotTransforme> getDetailsLotTransforme(int idLotTransforme) {
         return detailLotTransformeRepository.findByLotTransformeId(idLotTransforme);
@@ -210,7 +219,7 @@ public class TransformationService {
         if (lastLotTransforme != null) {
             return lastLotTransforme.getId();
         } else {
-            return -1; 
+            return -1;
         }
     }
 
@@ -221,6 +230,5 @@ public class TransformationService {
     public List<LotPaddyMouvement> getLotPaddyTouche(int idLotTransforme) {
         return lotPaddyMouvementRepository.findByLotPaddyTransformeId(idLotTransforme);
     }
-
 
 }

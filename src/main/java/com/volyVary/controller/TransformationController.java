@@ -142,27 +142,19 @@ public class TransformationController {
                 debutFiltre,
                 finFiltre,
                 pageable);
-
         m.addObject("lotPaddyTransforme", lots);
         m.addObject("debut", debut != null ? debut : "");
         m.addObject("fin", fin != null ? fin : "");
-
         m.addObject("transformation",
                 transformationService.getTransformation());
-
         Double total = transformationService.totalPaddyTransformer();
 
         if (total == null) {
-
             m.addObject("lotPaddyVide",
                     "aucun paddy transformer");
-
         } else {
-
             m.addObject("total", total);
-
         }
-
         return m;
     }
 

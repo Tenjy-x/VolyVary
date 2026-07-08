@@ -128,7 +128,7 @@ public class TransformationController {
 
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
         int safePage = Math.max(page, 0);
-        Pageable pageable = PageRequest.of(safePage, 10);
+        Pageable pageable = PageRequest.of(safePage, 9);
 
         LocalDateTime debutFiltre = parseDateTimeOrNull(debut);
         LocalDateTime finFiltre = parseDateTimeOrNull(fin);

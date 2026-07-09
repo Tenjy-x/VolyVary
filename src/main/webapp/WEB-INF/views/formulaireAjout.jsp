@@ -146,7 +146,6 @@
           <label>Date et heure</label>
           <input type="datetime-local" name="date" id="in-date" required>
         </div>
-
         <div class="form-field full">
           <label>Lots de paddy disponibles</label>
           <div class="lots-container">

@@ -1,5 +1,7 @@
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/VolyVaryApplication.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/controller/TransformationController.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/dto/HistoriqueDto.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/dto/LotStockDto.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/CategorieFourniture.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Client.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Collecte.java
@@ -15,6 +17,7 @@
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Lieu.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Livreur.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/LotPaddy.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/LotPaddyMouvement.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/LotPaddyTransforme.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Produit.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Reduction.java
@@ -23,11 +26,13 @@
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/StatutLotPaddy.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/StatutTransaction.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Transaction.java
-/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/Transformation.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/TransformationModel.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/modele/TypeTransaction.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/ClientRepository.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/DetailLotTransformeRepository.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/LotPaddyMouvementRepository.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/LotPaddyRepository.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/LotPaddyTransformeRepository.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/ProduitRepository.java
+/Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/repository/TransformationRepository.java
 /Users/dylan/Documents/App/S4/projetBaovola/module/VolyVary/src/main/java/com/volyVary/service/TransformationService.java

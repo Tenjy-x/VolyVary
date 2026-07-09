@@ -2,8 +2,10 @@ package com.volyVary.modele;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import com.volyVary.modele.Produit;
 
 @Entity
@@ -20,13 +22,13 @@ public class DetailLotTransforme {
 
     @ManyToOne
     @JoinColumn(name = "id_lot_transforme")
-    private LotPaddyTransforme Lot_transforme;
+    private LotPaddyTransforme lotTransforme;
 
     @Column(name = "quantite")
-    private Float quantite;
+    private double quantite;
 
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     public Integer getId() {
         return id;
@@ -44,27 +46,27 @@ public class DetailLotTransforme {
         Produit = produit;
     }
 
-    public LotPaddyTransforme getLot_transforme() {
-        return Lot_transforme;
+    public LotPaddyTransforme getLotTransforme() {
+        return lotTransforme;
     }
 
-    public void setLot_transforme(LotPaddyTransforme lot_transforme) {
-        Lot_transforme = lot_transforme;
+    public void setLotTransforme(LotPaddyTransforme lotTransforme) {
+        this.lotTransforme = lotTransforme;
     }
 
-    public Float getQuantite() {
+    public double getQuantite() {
         return quantite;
     }
 
-    public void setQuantite(Float quantite) {
+    public void setQuantite(double quantite) {
         this.quantite = quantite;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
     

@@ -1,6 +1,7 @@
 package com.volyVary.modele;
 
 import jakarta.persistence.*;
+import java.util.List;
 import java.time.LocalDate;
 
 @Entity
@@ -9,75 +10,78 @@ public class LotPaddy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private int idLotPaddy;
+
+    @Column(name = "reference")
     private String reference;
-    private Float quantite;
-    private Float taux_humidite;
+
+    @Column(name = "quantite")
+    private Double quantite;
+
+    @Column(name = "taux_humidite")
+    private Double tauxhumidite;
+
+    @Column(name = "date")
     private LocalDate date;
-    private Float prix_collecte;
-    public Integer getid() {
-        return id;
+
+    @Column(name = "prix_collecte")
+    private Double prixCollecte;
+
+    @ManyToOne
+    @JoinColumn(name = "id_collecte")
+    private Collecte collecte;
+
+    // @OneToMany(mappedBy = "lotPaddy")
+    // private List<HistoriqueCollecte> historiquesLotPaddy;
+
+    public LotPaddy() {}
+
+    public int getIdLotPaddy() {
+        return idLotPaddy;
     }
-
-
-    public void setid(Integer id) {
-        this.id = id;
+    public void setIdLotPaddy(int idLotPaddy) {
+        this.idLotPaddy = idLotPaddy;
     }
-
-
 
     public String getReference() {
         return reference;
     }
-
-
     public void setReference(String reference) {
         this.reference = reference;
     }
 
-
-    public Float getQuantite() {
+    public Double getQuantite() {
         return quantite;
     }
-
-
-    public void setQuantite(Float quantite) {
+    public void setQuantite(Double quantite) {
         this.quantite = quantite;
     }
 
-
-    public Float getTaux_humidite() {
-        return taux_humidite;
+    public Double getTauxHumidite() {
+        return tauxhumidite;
     }
-
-
-    public void setTaux_humidite(Float taux_humidite) {
-        this.taux_humidite = taux_humidite;
+    public void setTauxHumidite(Double tauxhumidite) {
+        this.tauxhumidite = tauxhumidite;
     }
-
 
     public LocalDate getDate() {
         return date;
     }
-
-
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-
-    public Float getPrix_collecte() {
-        return prix_collecte;
+    public Double getPrixCollecte() {
+        return prixCollecte;
+    }
+    public void setPrixCollecte(Double prixCollecte) {
+        this.prixCollecte = prixCollecte;
     }
 
-
-    public void setPrix_collecte(Float prix_collecte) {
-        this.prix_collecte = prix_collecte;
+    public Collecte getCollecte() {
+        return collecte;
     }
-
-
-    public LotPaddy() {
+    public void setCollecte(Collecte collecte) {
+        this.collecte = collecte;
     }
-
-
 }

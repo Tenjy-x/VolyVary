@@ -2,7 +2,7 @@ package com.volyVary.modele;
 
 import java.sql.Date;
 import java.util.List;
-
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,10 +21,21 @@ public class LotPaddyTransforme {
     private double quantite;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
-    @OneToMany(mappedBy = "Lot_transforme", cascade = CascadeType.ALL)
+    @Column(name = "prix_transformation")
+    private double prixTransformation;
+    
+    @OneToMany(mappedBy = "lotTransforme", cascade = CascadeType.ALL)
     private List<DetailLotTransforme> detailLotTransforme;
+
+    public double getPrixTransformation() {
+        return prixTransformation;
+    }
+
+    public void setPrixTransformation(double prixTransformation) {
+        this.prixTransformation = prixTransformation;
+    }
 
     public int getId() {
         return id;
@@ -50,20 +61,13 @@ public class LotPaddyTransforme {
         this.quantite = quantite;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public List<DetailLotTransforme> getDetailLotTransforme() {
-        return detailLotTransforme;
-    }
-
-    public void setDetailLotTransforme(List<DetailLotTransforme> detailLotTransforme) {
-        this.detailLotTransforme = detailLotTransforme;
-    }
 
 }

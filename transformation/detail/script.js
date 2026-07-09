@@ -22,8 +22,8 @@ if (pageBody) {
             ${saved.obtenues.map(o => `<tr><td>${o.produit}</td><td>${o.quantite} kg</td></tr>`).join('')}
           </tbody>
         </table>
-
         <div class="recap-row" style="margin-top:12px"><span class="recap-label">Prix/kg pour la transformation</span><span class="recap-value">${formatAr(saved.prixUnitaire)}</span></div>
+
         <div class="recap-row"><span class="recap-label">Montant total</span><span class="recap-value">${formatAr(saved.montant)}</span></div>
 
         <p style="font-size:var(--fs-sm);font-weight:600;color:var(--color-gray-700);margin-top:12px">Lots de Paddy</p>

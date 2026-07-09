@@ -1,13 +1,7 @@
 package com.volyVary.modele;
 
-
 import jakarta.persistence.*;
-
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.volyVary.modele.Produit;
-
 @Entity
 @Table(name = "detail_lot_transforme")
 public class DetailLotTransforme {

@@ -123,7 +123,6 @@ CREATE TABLE lot_paddy_mouvement(
     id_lot_transforme INT,
     quantite NUMERIC(12, 3),
     date TIMESTAMP,
-    
     FOREIGN KEY (id_lot_paddy) REFERENCES lot_paddy(id),
     FOREIGN KEY (id_lot_transforme) REFERENCES lot_paddy_transforme(id)
 );

@@ -18,6 +18,12 @@
             ? "/transformation/pdfListe?debut=" + (hasDebut ? debut : "") + "&fin=" + (hasFin ? fin : "")
             : "/transformation/pdfListe";
             double depenseTotal = (t != null) ? t.getPrixUnitaire() * totalPaddyTransforme : 0;
+            long pageStart = (listePaddy != null && listePaddy.getTotalElements() > 0)
+            ? ((long) listePaddy.getNumber() * listePaddy.getSize()) + 1
+            : 0;
+            long pageEnd = (listePaddy != null && listePaddy.getTotalElements() > 0)
+            ? pageStart + listePaddy.getNumberOfElements() - 1
+            : 0;
             %>
             <!DOCTYPE html>
             <html lang="fr">
@@ -30,6 +36,152 @@
               <link rel="stylesheet" href="/assets/css/base.css">
               <link rel="stylesheet" href="/assets/css/components.css">
               <link rel="stylesheet" href="/assets/css/style.css">
+              <style>
+                .filter-panel {
+                  padding: var(--space-5);
+                }
+
+                .filter-panel-head {
+                  display: flex;
+                  align-items: flex-start;
+                  justify-content: space-between;
+                  gap: var(--space-4);
+                  margin-bottom: var(--space-4);
+                  flex-wrap: wrap;
+                }
+
+                .filter-panel-head h2 {
+                  font-size: var(--fs-lg);
+                  color: var(--color-gray-900);
+                  margin-bottom: 4px;
+                }
+
+                .filter-panel-head p {
+                  color: var(--color-gray-500);
+                  font-size: var(--fs-sm);
+                }
+
+                .filter-bar {
+                  display: grid;
+                  grid-template-columns: repeat(2, minmax(190px, 1fr)) auto;
+                  gap: var(--space-4);
+                  align-items: end;
+                }
+
+                .filter-actions {
+                  display: flex;
+                  align-items: center;
+                  gap: var(--space-2);
+                  flex-wrap: wrap;
+                }
+
+                .filter-chip {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  padding: 8px 12px;
+                  border-radius: 999px;
+                  background: var(--color-blue-light);
+                  color: var(--color-blue);
+                  font-size: var(--fs-xs);
+                  font-weight: 700;
+                }
+
+                .filter-chip.off {
+                  background: var(--color-gray-100);
+                  color: var(--color-gray-500);
+                }
+
+                .filter-input {
+                  position: relative;
+                }
+
+                .filter-input input {
+                  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+                }
+
+                .table-meta {
+                  display: flex;
+                  align-items: center;
+                  gap: var(--space-3);
+                  flex-wrap: wrap;
+                }
+
+                .table-search-hint {
+                  font-size: var(--fs-xs);
+                  color: var(--color-gray-500);
+                }
+
+                .table-result-badge {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  min-width: 40px;
+                  padding: 7px 12px;
+                  border-radius: 999px;
+                  background: var(--color-gray-100);
+                  color: var(--color-gray-700);
+                  font-size: var(--fs-xs);
+                  font-weight: 700;
+                }
+
+                .dt-search.active {
+                  background: var(--color-white);
+                  box-shadow: 0 0 0 3px var(--color-blue-light);
+                }
+
+                .sort-link {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  color: inherit;
+                  font: inherit;
+                  text-transform: inherit;
+                  letter-spacing: inherit;
+                  background: none;
+                  border: none;
+                  padding: 0;
+                  cursor: pointer;
+                }
+
+                .sort-link:hover {
+                  color: var(--color-blue);
+                }
+
+                .sort-link:focus-visible {
+                  outline: 2px solid var(--color-blue);
+                  outline-offset: 2px;
+                  border-radius: 4px;
+                }
+
+                .sort-arrow {
+                  display: inline-block;
+                  min-width: 10px;
+                  opacity: 0.35;
+                  font-size: 10px;
+                  transition: opacity var(--transition), color var(--transition);
+                }
+
+                th.sorted .sort-arrow {
+                  opacity: 1;
+                  color: var(--color-blue);
+                }
+
+                @media (max-width: 900px) {
+                  .filter-bar {
+                    grid-template-columns: 1fr;
+                  }
+
+                  .filter-actions {
+                    width: 100%;
+                  }
+
+                  .filter-actions .btn {
+                    flex: 1;
+                    justify-content: center;
+                  }
+                }
+              </style>
             </head>
 
             <body>
@@ -94,109 +246,181 @@
 
                   <%-- Filtre --%>
                     <div class="section-card">
-                      <form action="/transformation/traitementFiltre" method="get" class="filter-bar">
-                        <div class="form-field">
-                          <label>Date debut</label>
-                          <input type="datetime-local" name="debut" value="<%= hasDebut ? debut : "" %>">
+                      <div class="filter-panel">
+                        <div class="filter-panel-head">
+                          <div>
+                            <h2>Filtrer les transformations</h2>
+                            <p>Affinez la liste par plage de dates avant export ou consultation detaillee.</p>
+                          </div>
+                          <span class="filter-chip <%= hasFiltre ? "" : "off" %>">
+                            <%= hasFiltre ? "Filtre actif" : "Aucun filtre actif" %>
+                          </span>
                         </div>
-                        <div class="form-field">
-                          <label>Date fin</label>
-                          <input type="datetime-local" name="fin" value="<%= hasFin ? fin : "" %>">
-                        </div>
-                        <input type="hidden" name="page" value="0">
-                        <button type="submit" class="btn btn-outline btn-sm">Filtrer</button>
-                        <a href="<%= exportPdfUrl %>" class="btn btn-primary btn-sm">Exporter PDF</a>
-                      </form>
+                        <form action="/transformation/traitementFiltre" method="get" class="filter-bar">
+                          <div class="form-field filter-input">
+                            <label for="filter-debut">Date debut</label>
+                            <input id="filter-debut" type="datetime-local" name="debut" value="<%= hasDebut ? debut : "" %>">
+                          </div>
+                          <div class="form-field filter-input">
+                            <label for="filter-fin">Date fin</label>
+                            <input id="filter-fin" type="datetime-local" name="fin" value="<%= hasFin ? fin : "" %>">
+                          </div>
+                          <div class="filter-actions">
+                            <input type="hidden" name="page" value="0">
+                            <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
+                            <a href="/transformation/lotPaddyTransforme" class="btn btn-outline btn-sm">Reinitialiser</a>
+                          </div>
+                        </form>
+                      </div>
                     </div>
 
                     <%-- Tableau --%>
                       <div class="section-card">
                         <div id="trf-table">
-                          <table class="data-table">
-                            <thead>
-                              <tr>
-                                <th>Reference</th>
-                                <th>Date</th>
-                                <th>Quantite</th>
-                                <th>Prix unitaire</th>
-                                <th>Total</th>
-                                <th></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <% if (listePaddy==null || listePaddy.isEmpty()) { %>
+                          <div class="dt-toolbar">
+                            <div class="dt-toolbar-left">
+                              <div class="dt-search" id="trf-search-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <circle cx="11" cy="11" r="8" />
+                                  <path d="M21 21l-4.35-4.35" />
+                                </svg>
+                                <input type="text" id="trf-search-input" placeholder="Rechercher une reference...">
+                              </div>
+                              <div class="table-meta">
+                                <span class="table-result-badge" id="trf-search-count"><%= listePaddy != null ? listePaddy.getNumberOfElements() : 0 %></span>
+                                <span class="table-search-hint">Recherche sur la colonne reference de la page en cours</span>
+                              </div>
+                            </div>
+                            <div class="dt-toolbar-right">
+                              <a href="<%= exportPdfUrl %>" class="btn btn-outline btn-sm">PDF</a>
+                              <a href="/transformation/formulaireAjoutTransformation" class="btn btn-primary btn-sm">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M12 5v14M5 12h14" />
+                                </svg>
+                                Nouvelle transformation
+                              </a>
+                            </div>
+                          </div>
+                          <div class="table-wrap">
+                            <table class="dt" id="trf-list-table">
+                              <thead>
                                 <tr>
-                                  <td colspan="6" class="table-empty">
-                                    <%= message !=null ? message : "Aucun resultat" %>
-                                  </td>
+                                  <th data-sort-key="reference">
+                                    <button type="button" class="sort-link">
+                                      Reference
+                                      <span class="sort-arrow">▲</span>
+                                    </button>
+                                  </th>
+                                  <th data-sort-key="date">
+                                    <button type="button" class="sort-link">
+                                      Date
+                                      <span class="sort-arrow">▲</span>
+                                    </button>
+                                  </th>
+                                  <th data-sort-key="quantite">
+                                    <button type="button" class="sort-link">
+                                      Quantite
+                                      <span class="sort-arrow">▲</span>
+                                    </button>
+                                  </th>
+                                  <th data-sort-key="prix-unitaire">
+                                    <button type="button" class="sort-link">
+                                      Prix unitaire
+                                      <span class="sort-arrow">▲</span>
+                                    </button>
+                                  </th>
+                                  <th data-sort-key="total">
+                                    <button type="button" class="sort-link">
+                                      Total
+                                      <span class="sort-arrow">▲</span>
+                                    </button>
+                                  </th>
+                                  <th>Actions</th>
                                 </tr>
-                                <% } else { %>
-                                  <% for (LotPaddyTransforme l : listePaddy.getContent()) { %>
-                                    <tr>
-                                      <td>
-                                        <%= l.getReference() %>
-                                      </td>
-                                      <td>
-                                        <%= l.getDate() %>
-                                      </td>
-                                      <td>
-                                        <%= l.getQuantite() %> kg
-                                      </td>
-                                      <td>
-                                        <%= t !=null ? t.getPrixUnitaire() : "-" %> Ar
-                                      </td>
-                                      <td>
-                                        <%= l.getPrixTransformation() %> Ar
-                                      </td>
-                                      <td>
-                                        <a class="action-icon"
-                                          href="/transformation/detailsLotPaddyTransforme?idLotTransforme=<%= l.getId() %>"
-                                          aria-label="Voir detail">
-                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                            <circle cx="12" cy="12" r="3" />
-                                          </svg>
-                                        </a>
-                                      </td>
-                                    </tr>
-                                    <% } %>
+                              </thead>
+                              <tbody>
+                                <% if (listePaddy==null || listePaddy.isEmpty()) { %>
+                                  <tr>
+                                    <td colspan="6" class="dt-empty">
+                                      <%= message !=null ? message : "Aucun resultat" %>
+                                    </td>
+                                  </tr>
+                                  <% } else { %>
+                                    <% for (LotPaddyTransforme l : listePaddy.getContent()) { %>
+                                      <tr class="trf-row"
+                                        data-reference="<%= l.getReference() != null ? l.getReference().toLowerCase() : "" %>"
+                                        data-date="<%= l.getDate() != null ? l.getDate().toString() : "" %>"
+                                        data-quantite="<%= l.getQuantite() %>"
+                                        data-prix-unitaire="<%= t != null ? t.getPrixUnitaire() : 0 %>"
+                                        data-total="<%= l.getPrixTransformation() %>">
+                                        <td>
+                                          <%= l.getReference() %>
+                                        </td>
+                                        <td>
+                                          <%= l.getDate() %>
+                                        </td>
+                                        <td>
+                                          <%= l.getQuantite() %> kg
+                                        </td>
+                                        <td>
+                                          <%= t !=null ? t.getPrixUnitaire() : "-" %> Ar
+                                        </td>
+                                        <td>
+                                          <%= l.getPrixTransformation() %> Ar
+                                        </td>
+                                        <td>
+                                          <div class="row-actions">
+                                            <a class="action-icon"
+                                              href="/transformation/detailsLotPaddyTransforme?idLotTransforme=<%= l.getId() %>"
+                                              aria-label="Voir detail">
+                                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                              </svg>
+                                            </a>
+                                          </div>
+                                        </td>
+                                      </tr>
                                       <% } %>
-                                      
-                            </tbody>
-                          </table>
+                                <% } %>
+                                <tr id="trf-empty-search" style="display:none;">
+                                  <td colspan="6" class="dt-empty">Aucun resultat</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                           <% if(listePaddy !=null) { %>
-                         <div class="pagination">
+                            <div class="dt-pagination">
+                              <span class="dt-info"><%= pageStart %>-<%= pageEnd %> sur <%= listePaddy.getTotalElements() %></span>
+                              <div class="dt-pages">
+                                <% if (listePaddy.hasPrevious()) { %>
+                                  <a class="dt-page-btn"
+                                     href="<%= hasFiltre
+                                          ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() - 1)
+                                              + "&debut=" + (hasDebut ? debut : "")
+                                              + "&fin=" + (hasFin ? fin : "")
+                                          : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() - 1)
+                                     %>">&laquo;</a>
+                                <% } else { %>
+                                  <span class="dt-page-btn" style="cursor:not-allowed;opacity:.35">&laquo;</span>
+                                <% } %>
 
-    <% if (listePaddy.hasPrevious()) { %>
-        <a class="btn btn-outline btn-sm"
-           href="<%= hasFiltre
-                ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() - 1)
-                    + "&debut=" + (hasDebut ? debut : "")
-                    + "&fin=" + (hasFin ? fin : "")
-                : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() - 1)
-           %>">
-            Précédent
-        </a>
-    <% } %>
+                                <span class="dt-page-btn active"><%= listePaddy.getNumber() + 1 %></span>
 
-    <span>
-        Page <%= listePaddy.getNumber() + 1 %> / <%= listePaddy.getTotalPages() %>
-    </span>
-
-    <% if (listePaddy.hasNext()) { %>
-        <a class="btn btn-outline btn-sm"
-           href="<%= hasFiltre
-                ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() + 1)
-                    + "&debut=" + (hasDebut ? debut : "")
-                    + "&fin=" + (hasFin ? fin : "")
-                : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() + 1)
-           %>">
-            Suivant
-        </a>
-    <% } %>
-
-</div>
-                            <% } %>
+                                <% if (listePaddy.hasNext()) { %>
+                                  <a class="dt-page-btn"
+                                     href="<%= hasFiltre
+                                          ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() + 1)
+                                              + "&debut=" + (hasDebut ? debut : "")
+                                              + "&fin=" + (hasFin ? fin : "")
+                                          : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() + 1)
+                                     %>">&raquo;</a>
+                                <% } else { %>
+                                  <span class="dt-page-btn" style="cursor:not-allowed;opacity:.35">&raquo;</span>
+                                <% } %>
+                              </div>
+                            </div>
+                          <% } %>
                         </div>
                       </div>
               </template>
@@ -220,6 +444,123 @@
                 const pageBody = renderShell('transformation');
                 if (pageBody) {
                   pageBody.appendChild(document.getElementById('tpl-page').content.cloneNode(true));
+
+                  const searchInput = document.getElementById('trf-search-input');
+                  const tableBody = document.querySelector('#trf-list-table tbody');
+                  const rows = Array.from(document.querySelectorAll('#trf-list-table .trf-row'));
+                  const emptySearchRow = document.getElementById('trf-empty-search');
+                  const searchCount = document.getElementById('trf-search-count');
+                  const searchBox = document.getElementById('trf-search-box');
+                  const sortableHeaders = Array.from(document.querySelectorAll('#trf-list-table th[data-sort-key]'));
+                  const sortState = { key: null, direction: 'asc' };
+                  const numericColumns = ['quantite', 'prix-unitaire', 'total'];
+
+                  if (searchInput && tableBody && rows.length) {
+                    function getCellValue(row, key) {
+                      const value = row.dataset[key] || '';
+                      return numericColumns.includes(key) ? Number(value) : String(value);
+                    }
+
+                    function compareRows(leftRow, rightRow) {
+                      const leftValue = getCellValue(leftRow, sortState.key);
+                      const rightValue = getCellValue(rightRow, sortState.key);
+
+                      let result = 0;
+
+                      if (numericColumns.includes(sortState.key)) {
+                        result = leftValue - rightValue;
+                      } else {
+                        result = leftValue.localeCompare(rightValue, 'fr', {
+                          numeric: true,
+                          sensitivity: 'base'
+                        });
+                      }
+
+                      return sortState.direction === 'asc' ? result : -result;
+                    }
+
+                    function getRowsMatchingSearch() {
+                      const searchText = searchInput.value.trim().toLowerCase();
+
+                      return rows.filter(row => {
+                        const reference = row.dataset.reference || '';
+                        return searchText === '' || reference.includes(searchText);
+                      });
+                    }
+
+                    function updateSortHeaders() {
+                      sortableHeaders.forEach(header => {
+                        const arrow = header.querySelector('.sort-arrow');
+                        const isActive = header.dataset.sortKey === sortState.key;
+                        header.classList.toggle('sorted', isActive);
+
+                        if (arrow) {
+                          arrow.textContent = isActive && sortState.direction === 'desc' ? '▼' : '▲';
+                        }
+                      });
+                    }
+
+                    function updateResultCount(visibleRows) {
+                      if (searchCount) {
+                        searchCount.textContent = String(visibleRows.length);
+                      }
+                    }
+
+                    function updateSearchStyle() {
+                      if (searchBox) {
+                        const hasSearch = searchInput.value.trim() !== '';
+                        searchBox.classList.toggle('active', hasSearch);
+                      }
+                    }
+
+                    function showEmptyMessage(visibleRows) {
+                      if (emptySearchRow) {
+                        emptySearchRow.style.display = visibleRows.length === 0 ? '' : 'none';
+                        tableBody.appendChild(emptySearchRow);
+                      }
+                    }
+
+                    function renderRows() {
+                      const matchingRows = getRowsMatchingSearch();
+                      const hiddenRows = rows.filter(row => !matchingRows.includes(row));
+                      const visibleRows = sortState.key
+                        ? matchingRows.slice().sort(compareRows)
+                        : matchingRows;
+
+                      visibleRows.forEach(row => {
+                        row.style.display = '';
+                        tableBody.appendChild(row);
+                      });
+
+                      hiddenRows.forEach(row => {
+                        row.style.display = 'none';
+                        tableBody.appendChild(row);
+                      });
+
+                      updateResultCount(visibleRows);
+                      updateSearchStyle();
+                      showEmptyMessage(visibleRows);
+                      updateSortHeaders();
+                    }
+
+                    sortableHeaders.forEach(header => {
+                      header.addEventListener('click', () => {
+                        const nextKey = header.dataset.sortKey;
+
+                        if (sortState.key === nextKey) {
+                          sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+                        } else {
+                          sortState.key = nextKey;
+                          sortState.direction = 'asc';
+                        }
+
+                        renderRows();
+                      });
+                    });
+
+                    searchInput.addEventListener('input', renderRows);
+                    renderRows();
+                  }
                 }
               </script>
             </body>

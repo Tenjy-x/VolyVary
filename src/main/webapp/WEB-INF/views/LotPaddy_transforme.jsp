@@ -165,29 +165,37 @@
                             </tbody>
                           </table>
                           <% if(listePaddy !=null) { %>
-                            <div class="pagination">
-                              <% if(listePaddy.hasPrevious()) { %>
-                                <a class="btn btn-outline btn-sm" href="<%= hasFiltre
-        ? " /transformation/traitementFiltre?page="+(listePaddy.getNumber()-1)+" &debut="+(hasDebut ? debut : "")+"
-                                  &fin="+(hasFin ? fin : "")
-        : " /transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()-1) %>">
-                                  Précédent
-                                </a>
-                                <% } %>
+                         <div class="pagination">
 
-                                  <span>
-                                    Page <%= listePaddy.getNumber()+1 %> / <%= listePaddy.getTotalPages() %>
-                                  </span>
+    <% if (listePaddy.hasPrevious()) { %>
+        <a class="btn btn-outline btn-sm"
+           href="<%= hasFiltre
+                ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() - 1)
+                    + "&debut=" + (hasDebut ? debut : "")
+                    + "&fin=" + (hasFin ? fin : "")
+                : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() - 1)
+           %>">
+            Précédent
+        </a>
+    <% } %>
 
-                                  <% if(listePaddy.hasNext()) { %>
-                                    <a class="btn btn-outline btn-sm" href="<%= hasFiltre
-        ? " /transformation/traitementFiltre?page="+(listePaddy.getNumber()+1)+" &debut="+(hasDebut ? debut : "")+"
-                                      &fin="+(hasFin ? fin : "")
-        : " /transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()+1) %>">
-                                      Suivant
-                                    </a>
-                                    <% } %>
-                            </div>
+    <span>
+        Page <%= listePaddy.getNumber() + 1 %> / <%= listePaddy.getTotalPages() %>
+    </span>
+
+    <% if (listePaddy.hasNext()) { %>
+        <a class="btn btn-outline btn-sm"
+           href="<%= hasFiltre
+                ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() + 1)
+                    + "&debut=" + (hasDebut ? debut : "")
+                    + "&fin=" + (hasFin ? fin : "")
+                : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() + 1)
+           %>">
+            Suivant
+        </a>
+    <% } %>
+
+</div>
                             <% } %>
                         </div>
                       </div>

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="org.springframework.data.domain.Page" %>
-<%@ page import="com.volyVary.modele.LotPaddyTransforme" %>
-<%@ page import="com.volyVary.modele.TransformationModel" %>
+  <%@ page import="org.springframework.data.domain.Page" %>
+    <%@ page import="com.volyVary.modele.LotPaddyTransforme" %>
+      <%@ page import="com.volyVary.modele.TransformationModel" %>
 
         <% Page<LotPaddyTransforme> listePaddy =(Page<LotPaddyTransforme>) request.getAttribute("lotPaddyTransforme");
             TransformationModel t = (TransformationModel) request.getAttribute("transformation");
@@ -15,8 +15,8 @@
             boolean hasFin = fin != null && !fin.isBlank();
             boolean hasFiltre = hasDebut || hasFin;
             String exportPdfUrl = hasFiltre
-              ? "/transformation/pdfListe?debut=" + (hasDebut ? debut : "") + "&fin=" + (hasFin ? fin : "")
-              : "/transformation/pdfListe";
+            ? "/transformation/pdfListe?debut=" + (hasDebut ? debut : "") + "&fin=" + (hasFin ? fin : "")
+            : "/transformation/pdfListe";
             double depenseTotal = (t != null) ? t.getPrixUnitaire() * totalPaddyTransforme : 0;
             %>
             <!DOCTYPE html>
@@ -43,7 +43,7 @@
                   <a href="/transformation/formulaireAjoutTransformation" class="btn btn-primary btn-sm">+ Nouvelle
                     transformation</a>
                 </div>
-                
+
 
                 <%-- Stat cards --%>
                   <div class="stat-grid">
@@ -161,30 +161,33 @@
                                     </tr>
                                     <% } %>
                                       <% } %>
+                                      
                             </tbody>
                           </table>
                           <% if(listePaddy !=null) { %>
-                          <div class="pagination">
-  <% if(listePaddy.hasPrevious()) { %>
-    <a class="btn btn-outline btn-sm" href="<%= hasFiltre
-        ? "/transformation/traitementFiltre?page="+(listePaddy.getNumber()-1)+"&debut="+(hasDebut ? debut : "")+"&fin="+(hasFin ? fin : "")
-        : "/transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()-1) %>">
-      Précédent
-    </a>
-  <% } %>
+                            <div class="pagination">
+                              <% if(listePaddy.hasPrevious()) { %>
+                                <a class="btn btn-outline btn-sm" href="<%= hasFiltre
+        ? " /transformation/traitementFiltre?page="+(listePaddy.getNumber()-1)+" &debut="+(hasDebut ? debut : "")+"
+                                  &fin="+(hasFin ? fin : "")
+        : " /transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()-1) %>">
+                                  Précédent
+                                </a>
+                                <% } %>
 
-  <span>
-    Page <%= listePaddy.getNumber()+1 %> / <%= listePaddy.getTotalPages() %>
-  </span>
+                                  <span>
+                                    Page <%= listePaddy.getNumber()+1 %> / <%= listePaddy.getTotalPages() %>
+                                  </span>
 
-  <% if(listePaddy.hasNext()) { %>
-    <a class="btn btn-outline btn-sm" href="<%= hasFiltre
-        ? "/transformation/traitementFiltre?page="+(listePaddy.getNumber()+1)+"&debut="+(hasDebut ? debut : "")+"&fin="+(hasFin ? fin : "")
-        : "/transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()+1) %>">
-      Suivant
-    </a>
-  <% } %>
-</div>
+                                  <% if(listePaddy.hasNext()) { %>
+                                    <a class="btn btn-outline btn-sm" href="<%= hasFiltre
+        ? " /transformation/traitementFiltre?page="+(listePaddy.getNumber()+1)+" &debut="+(hasDebut ? debut : "")+"
+                                      &fin="+(hasFin ? fin : "")
+        : " /transformation/lotPaddyTransforme?page="+(listePaddy.getNumber()+1) %>">
+                                      Suivant
+                                    </a>
+                                    <% } %>
+                            </div>
                             <% } %>
                         </div>
                       </div>

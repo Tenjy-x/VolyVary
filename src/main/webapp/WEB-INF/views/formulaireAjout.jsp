@@ -129,7 +129,7 @@
 <template id="tpl-page">
   <div class="page-heading">
     <div><h1>Transformation</h1><p>Transformer un ou plusieurs lots de paddy</p></div>
-    <a href="/transformation" class="btn btn-outline btn-sm">Retour a la liste</a>
+    <a href="/transformation/lotPaddyTransforme" class="btn btn-outline btn-sm">Retour a la liste</a>
   </div>
 
   <% if (success != null) { %>

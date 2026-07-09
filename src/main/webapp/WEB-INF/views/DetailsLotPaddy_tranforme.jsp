@@ -32,7 +32,7 @@
     <% if (error != null) { %>
       <div class="card-body flow-empty">
         <p><%= error %></p>
-        <a class="detail-link" href="/transformation">Retour a la liste</a>
+        <a class="detail-link" href="/transformation/lotPaddyTransforme">Retour a la liste</a>
       </div>
     <% } else if (details != null && !details.isEmpty() && lotpaddyTransforme != null) { %>
       <div class="card-head"><h3>Detail lot transforme</h3></div>

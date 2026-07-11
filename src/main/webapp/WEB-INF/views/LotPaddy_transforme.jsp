@@ -11,9 +11,24 @@
             String testPaddyTransforme = (String) request.getAttribute("lotPaddyVide");
             String debut = request.getParameter("debut");
             String fin = request.getParameter("fin");
+            String referenceParam = request.getParameter("reference");
+            String sortByParam = request.getParameter("sortBy");
+            String sortDirParam = request.getParameter("sortDir");
             boolean hasDebut = debut != null && !debut.isBlank();
             boolean hasFin = fin != null && !fin.isBlank();
             boolean hasFiltre = hasDebut || hasFin;
+            boolean hasReferenceSearch = referenceParam != null && !referenceParam.isBlank();
+            String currentSortBy = (sortByParam != null && !sortByParam.isBlank()) ? sortByParam : "date";
+            String currentSortDir = "asc".equalsIgnoreCase(sortDirParam) ? "asc" : "desc";
+            String listBaseUrl;
+            if (hasReferenceSearch) {
+              listBaseUrl = "/transformation/searchReference?reference=" + referenceParam + "&";
+            } else if (hasFiltre) {
+              listBaseUrl = "/transformation/traitementFiltre?debut=" + (hasDebut ? debut : "")
+                  + "&fin=" + (hasFin ? fin : "") + "&";
+            } else {
+              listBaseUrl = "/transformation/lotPaddyTransforme?";
+            }
             String exportPdfUrl = hasFiltre
             ? "/transformation/pdfListe?debut=" + (hasDebut ? debut : "") + "&fin=" + (hasFin ? fin : "")
             : "/transformation/pdfListe";
@@ -37,150 +52,6 @@
               <link rel="stylesheet" href="/assets/css/components.css">
               <link rel="stylesheet" href="/assets/css/style.css">
               <style>
-                .filter-panel {
-                  padding: var(--space-5);
-                }
-
-                .filter-panel-head {
-                  display: flex;
-                  align-items: flex-start;
-                  justify-content: space-between;
-                  gap: var(--space-4);
-                  margin-bottom: var(--space-4);
-                  flex-wrap: wrap;
-                }
-
-                .filter-panel-head h2 {
-                  font-size: var(--fs-lg);
-                  color: var(--color-gray-900);
-                  margin-bottom: 4px;
-                }
-
-                .filter-panel-head p {
-                  color: var(--color-gray-500);
-                  font-size: var(--fs-sm);
-                }
-
-                .filter-bar {
-                  display: grid;
-                  grid-template-columns: repeat(2, minmax(190px, 1fr)) auto;
-                  gap: var(--space-4);
-                  align-items: end;
-                }
-
-                .filter-actions {
-                  display: flex;
-                  align-items: center;
-                  gap: var(--space-2);
-                  flex-wrap: wrap;
-                }
-
-                .filter-chip {
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 6px;
-                  padding: 8px 12px;
-                  border-radius: 999px;
-                  background: var(--color-blue-light);
-                  color: var(--color-blue);
-                  font-size: var(--fs-xs);
-                  font-weight: 700;
-                }
-
-                .filter-chip.off {
-                  background: var(--color-gray-100);
-                  color: var(--color-gray-500);
-                }
-
-                .filter-input {
-                  position: relative;
-                }
-
-                .filter-input input {
-                  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-                }
-
-                .table-meta {
-                  display: flex;
-                  align-items: center;
-                  gap: var(--space-3);
-                  flex-wrap: wrap;
-                }
-
-                .table-search-hint {
-                  font-size: var(--fs-xs);
-                  color: var(--color-gray-500);
-                }
-
-                .table-result-badge {
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  min-width: 40px;
-                  padding: 7px 12px;
-                  border-radius: 999px;
-                  background: var(--color-gray-100);
-                  color: var(--color-gray-700);
-                  font-size: var(--fs-xs);
-                  font-weight: 700;
-                }
-
-                .dt-search.active {
-                  background: var(--color-white);
-                  box-shadow: 0 0 0 3px var(--color-blue-light);
-                }
-
-                .sort-link {
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 6px;
-                  color: inherit;
-                  font: inherit;
-                  text-transform: inherit;
-                  letter-spacing: inherit;
-                  background: none;
-                  border: none;
-                  padding: 0;
-                  cursor: pointer;
-                }
-
-                .sort-link:hover {
-                  color: var(--color-blue);
-                }
-
-                .sort-link:focus-visible {
-                  outline: 2px solid var(--color-blue);
-                  outline-offset: 2px;
-                  border-radius: 4px;
-                }
-
-                .sort-arrow {
-                  display: inline-block;
-                  min-width: 10px;
-                  opacity: 0.35;
-                  font-size: 10px;
-                  transition: opacity var(--transition), color var(--transition);
-                }
-
-                th.sorted .sort-arrow {
-                  opacity: 1;
-                  color: var(--color-blue);
-                }
-
-                @media (max-width: 900px) {
-                  .filter-bar {
-                    grid-template-columns: 1fr;
-                  }
-
-                  .filter-actions {
-                    width: 100%;
-                  }
-
-                  .filter-actions .btn {
-                    flex: 1;
-                    justify-content: center;
-                  }
-                }
               </style>
             </head>
 
@@ -267,6 +138,8 @@
                           </div>
                           <div class="filter-actions">
                             <input type="hidden" name="page" value="0">
+                            <input type="hidden" name="sortBy" value="<%= currentSortBy %>">
+                            <input type="hidden" name="sortDir" value="<%= currentSortDir %>">
                             <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
                             <a href="/transformation/lotPaddyTransforme" class="btn btn-outline btn-sm">Reinitialiser</a>
                           </div>
@@ -278,19 +151,22 @@
                       <div class="section-card">
                         <div id="trf-table">
                           <div class="dt-toolbar">
-                            <div class="dt-toolbar-left">
+                            <form action="/transformation/searchReference" method="get" class="dt-toolbar-left">
                               <div class="dt-search" id="trf-search-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <circle cx="11" cy="11" r="8" />
                                   <path d="M21 21l-4.35-4.35" />
                                 </svg>
-                                <input type="text" id="trf-search-input" placeholder="Rechercher une reference...">
+                                <input type="text" id="trf-search-input" name="reference" value="<%= referenceParam != null ? referenceParam : "" %>" placeholder="Rechercher une reference...">
+                                <input type="hidden" name="page" value="0">
+                                <input type="hidden" name="sortBy" value="<%= currentSortBy %>">
+                                <input type="hidden" name="sortDir" value="<%= currentSortDir %>">
                               </div>
                               <div class="table-meta">
                                 <span class="table-result-badge" id="trf-search-count"><%= listePaddy != null ? listePaddy.getNumberOfElements() : 0 %></span>
-                                <span class="table-search-hint">Recherche sur la colonne reference de la page en cours</span>
+                                <button type="submit" class="btn btn-primary btn-sm">Rechercher</button>
                               </div>
-                            </div>
+                            </form>
                             <div class="dt-toolbar-right">
                               <a href="<%= exportPdfUrl %>" class="btn btn-outline btn-sm">PDF</a>
                               <a href="/transformation/formulaireAjoutTransformation" class="btn btn-primary btn-sm">
@@ -306,34 +182,34 @@
                               <thead>
                                 <tr>
                                   <th data-sort-key="reference">
-                                    <button type="button" class="sort-link">
+                                    <a class="sort-link" href="<%= listBaseUrl %>page=0&sortBy=reference&sortDir=<%= ("reference".equals(currentSortBy) && "asc".equals(currentSortDir)) ? "desc" : "asc" %>">
                                       Reference
-                                      <span class="sort-arrow">▲</span>
-                                    </button>
+                                      <span class="sort-arrow"><%= "reference".equals(currentSortBy) ? ("asc".equals(currentSortDir) ? "▲" : "▼") : "▲" %></span>
+                                    </a>
                                   </th>
                                   <th data-sort-key="date">
-                                    <button type="button" class="sort-link">
+                                    <a class="sort-link" href="<%= listBaseUrl %>page=0&sortBy=date&sortDir=<%= ("date".equals(currentSortBy) && "asc".equals(currentSortDir)) ? "desc" : "asc" %>">
                                       Date
-                                      <span class="sort-arrow">▲</span>
-                                    </button>
+                                      <span class="sort-arrow"><%= "date".equals(currentSortBy) ? ("asc".equals(currentSortDir) ? "▲" : "▼") : "▲" %></span>
+                                    </a>
                                   </th>
                                   <th data-sort-key="quantite">
-                                    <button type="button" class="sort-link">
+                                    <a class="sort-link" href="<%= listBaseUrl %>page=0&sortBy=quantite&sortDir=<%= ("quantite".equals(currentSortBy) && "asc".equals(currentSortDir)) ? "desc" : "asc" %>">
                                       Quantite
-                                      <span class="sort-arrow">▲</span>
-                                    </button>
+                                      <span class="sort-arrow"><%= "quantite".equals(currentSortBy) ? ("asc".equals(currentSortDir) ? "▲" : "▼") : "▲" %></span>
+                                    </a>
                                   </th>
-                                  <th data-sort-key="prix-unitaire">
-                                    <button type="button" class="sort-link">
+                                  <th data-sort-key="prixTransformation">
+                                    <a class="sort-link" href="<%= listBaseUrl %>page=0&sortBy=prixTransformation&sortDir=<%= ("prixTransformation".equals(currentSortBy) && "asc".equals(currentSortDir)) ? "desc" : "asc" %>">
                                       Prix unitaire
-                                      <span class="sort-arrow">▲</span>
-                                    </button>
+                                      <span class="sort-arrow"><%= "prixTransformation".equals(currentSortBy) ? ("asc".equals(currentSortDir) ? "▲" : "▼") : "▲" %></span>
+                                    </a>
                                   </th>
-                                  <th data-sort-key="total">
-                                    <button type="button" class="sort-link">
+                                  <th data-sort-key="prixTransformation">
+                                    <a class="sort-link" href="<%= listBaseUrl %>page=0&sortBy=prixTransformation&sortDir=<%= ("prixTransformation".equals(currentSortBy) && "asc".equals(currentSortDir)) ? "desc" : "asc" %>">
                                       Total
-                                      <span class="sort-arrow">▲</span>
-                                    </button>
+                                      <span class="sort-arrow"><%= "prixTransformation".equals(currentSortBy) ? ("asc".equals(currentSortDir) ? "▲" : "▼") : "▲" %></span>
+                                    </a>
                                   </th>
                                   <th>Actions</th>
                                 </tr>
@@ -383,9 +259,6 @@
                                       </tr>
                                       <% } %>
                                 <% } %>
-                                <tr id="trf-empty-search" style="display:none;">
-                                  <td colspan="6" class="dt-empty">Aucun resultat</td>
-                                </tr>
                               </tbody>
                             </table>
                           </div>
@@ -395,12 +268,7 @@
                               <div class="dt-pages">
                                 <% if (listePaddy.hasPrevious()) { %>
                                   <a class="dt-page-btn"
-                                     href="<%= hasFiltre
-                                          ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() - 1)
-                                              + "&debut=" + (hasDebut ? debut : "")
-                                              + "&fin=" + (hasFin ? fin : "")
-                                          : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() - 1)
-                                     %>">&laquo;</a>
+                                     href="<%= listBaseUrl + "page=" + (listePaddy.getNumber() - 1) + "&sortBy=" + currentSortBy + "&sortDir=" + currentSortDir %>">&laquo;</a>
                                 <% } else { %>
                                   <span class="dt-page-btn" style="cursor:not-allowed;opacity:.35">&laquo;</span>
                                 <% } %>
@@ -409,12 +277,7 @@
 
                                 <% if (listePaddy.hasNext()) { %>
                                   <a class="dt-page-btn"
-                                     href="<%= hasFiltre
-                                          ? "/transformation/traitementFiltre?page=" + (listePaddy.getNumber() + 1)
-                                              + "&debut=" + (hasDebut ? debut : "")
-                                              + "&fin=" + (hasFin ? fin : "")
-                                          : "/transformation/lotPaddyTransforme?page=" + (listePaddy.getNumber() + 1)
-                                     %>">&raquo;</a>
+                                     href="<%= listBaseUrl + "page=" + (listePaddy.getNumber() + 1) + "&sortBy=" + currentSortBy + "&sortDir=" + currentSortDir %>">&raquo;</a>
                                 <% } else { %>
                                   <span class="dt-page-btn" style="cursor:not-allowed;opacity:.35">&raquo;</span>
                                 <% } %>
@@ -444,123 +307,6 @@
                 const pageBody = renderShell('transformation');
                 if (pageBody) {
                   pageBody.appendChild(document.getElementById('tpl-page').content.cloneNode(true));
-
-                  const searchInput = document.getElementById('trf-search-input');
-                  const tableBody = document.querySelector('#trf-list-table tbody');
-                  const rows = Array.from(document.querySelectorAll('#trf-list-table .trf-row'));
-                  const emptySearchRow = document.getElementById('trf-empty-search');
-                  const searchCount = document.getElementById('trf-search-count');
-                  const searchBox = document.getElementById('trf-search-box');
-                  const sortableHeaders = Array.from(document.querySelectorAll('#trf-list-table th[data-sort-key]'));
-                  const sortState = { key: null, direction: 'asc' };
-                  const numericColumns = ['quantite', 'prix-unitaire', 'total'];
-
-                  if (searchInput && tableBody && rows.length) {
-                    function getCellValue(row, key) {
-                      const value = row.dataset[key] || '';
-                      return numericColumns.includes(key) ? Number(value) : String(value);
-                    }
-
-                    function compareRows(leftRow, rightRow) {
-                      const leftValue = getCellValue(leftRow, sortState.key);
-                      const rightValue = getCellValue(rightRow, sortState.key);
-
-                      let result = 0;
-
-                      if (numericColumns.includes(sortState.key)) {
-                        result = leftValue - rightValue;
-                      } else {
-                        result = leftValue.localeCompare(rightValue, 'fr', {
-                          numeric: true,
-                          sensitivity: 'base'
-                        });
-                      }
-
-                      return sortState.direction === 'asc' ? result : -result;
-                    }
-
-                    function getRowsMatchingSearch() {
-                      const searchText = searchInput.value.trim().toLowerCase();
-
-                      return rows.filter(row => {
-                        const reference = row.dataset.reference || '';
-                        return searchText === '' || reference.includes(searchText);
-                      });
-                    }
-
-                    function updateSortHeaders() {
-                      sortableHeaders.forEach(header => {
-                        const arrow = header.querySelector('.sort-arrow');
-                        const isActive = header.dataset.sortKey === sortState.key;
-                        header.classList.toggle('sorted', isActive);
-
-                        if (arrow) {
-                          arrow.textContent = isActive && sortState.direction === 'desc' ? '▼' : '▲';
-                        }
-                      });
-                    }
-
-                    function updateResultCount(visibleRows) {
-                      if (searchCount) {
-                        searchCount.textContent = String(visibleRows.length);
-                      }
-                    }
-
-                    function updateSearchStyle() {
-                      if (searchBox) {
-                        const hasSearch = searchInput.value.trim() !== '';
-                        searchBox.classList.toggle('active', hasSearch);
-                      }
-                    }
-
-                    function showEmptyMessage(visibleRows) {
-                      if (emptySearchRow) {
-                        emptySearchRow.style.display = visibleRows.length === 0 ? '' : 'none';
-                        tableBody.appendChild(emptySearchRow);
-                      }
-                    }
-
-                    function renderRows() {
-                      const matchingRows = getRowsMatchingSearch();
-                      const hiddenRows = rows.filter(row => !matchingRows.includes(row));
-                      const visibleRows = sortState.key
-                        ? matchingRows.slice().sort(compareRows)
-                        : matchingRows;
-
-                      visibleRows.forEach(row => {
-                        row.style.display = '';
-                        tableBody.appendChild(row);
-                      });
-
-                      hiddenRows.forEach(row => {
-                        row.style.display = 'none';
-                        tableBody.appendChild(row);
-                      });
-
-                      updateResultCount(visibleRows);
-                      updateSearchStyle();
-                      showEmptyMessage(visibleRows);
-                      updateSortHeaders();
-                    }
-
-                    sortableHeaders.forEach(header => {
-                      header.addEventListener('click', () => {
-                        const nextKey = header.dataset.sortKey;
-
-                        if (sortState.key === nextKey) {
-                          sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
-                        } else {
-                          sortState.key = nextKey;
-                          sortState.direction = 'asc';
-                        }
-
-                        renderRows();
-                      });
-                    });
-
-                    searchInput.addEventListener('input', renderRows);
-                    renderRows();
-                  }
                 }
               </script>
             </body>

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -85,9 +86,25 @@ public class LotPaddyTransformerController {
 
     @GetMapping("/lotPaddyTransforme")
     public ModelAndView afficheFormulaireHistorique(
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
-        Pageable pageable = PageRequest.of(page, 9);
+        int safePage = Math.max(page, 0);
+        String safeSortBy = "date";
+        if ("reference".equals(sortBy)
+            || "date".equals(sortBy)
+            || "quantite".equals(sortBy)
+            || "prixTransformation".equals(sortBy)) {
+            safeSortBy = sortBy;
+        }
+        Sort sort;
+        if ("asc".equalsIgnoreCase(sortDir)) {
+            sort = Sort.by(safeSortBy).ascending();
+        } else {
+            sort = Sort.by(safeSortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(safePage, 9, sort);
 
         Page<LotPaddyTransforme> lots = lotPaddyTransformerService.getAll(pageable);
 
@@ -108,11 +125,26 @@ public class LotPaddyTransformerController {
     public ModelAndView traitementFiltre(
             @RequestParam(required = false) String debut,
             @RequestParam(required = false) String fin,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
 
         ModelAndView m = new ModelAndView("LotPaddy_transforme");
         int safePage = Math.max(page, 0);
-        Pageable pageable = PageRequest.of(safePage, 9);
+        String safeSortBy = "date";
+        if ("reference".equals(sortBy)
+            || "date".equals(sortBy)
+            || "quantite".equals(sortBy)
+            || "prixTransformation".equals(sortBy)) {
+            safeSortBy = sortBy;
+        }
+        Sort sort;
+        if ("asc".equalsIgnoreCase(sortDir)) {
+            sort = Sort.by(safeSortBy).ascending();
+        } else {
+            sort = Sort.by(safeSortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(safePage, 9, sort);
 
         LocalDateTime debutFiltre = parseDateTimeOrNull(debut);
         LocalDateTime finFiltre = parseDateTimeOrNull(fin);
@@ -127,8 +159,16 @@ public class LotPaddyTransformerController {
                 finFiltre,
                 pageable);
         m.addObject("lotPaddyTransforme", lots);
-        m.addObject("debut", debut != null ? debut : "");
-        m.addObject("fin", fin != null ? fin : "");
+        String debutValue = "";
+        if (debut != null) {
+            debutValue = debut;
+        }
+        String finValue = "";
+        if (fin != null) {
+            finValue = fin;
+        }
+        m.addObject("debut", debutValue);
+        m.addObject("fin", finValue);
         m.addObject("transformation",
                 transformationService.getTransformation());
         Double total = lotPaddyTransformerService.totalPaddyTransformer();
@@ -169,7 +209,10 @@ public class LotPaddyTransformerController {
         List<LotPaddyTransforme> lots = lotsPage.getContent();
 
         TransformationModel transformation = transformationService.getTransformation();
-        double prixUnitaire = transformation != null ? transformation.getPrixUnitaire() : 0.0;
+        double prixUnitaire = 0.0;
+        if (transformation != null) {
+            prixUnitaire = transformation.getPrixUnitaire();
+        }
         double totalQuantite = lotPaddyTransformerService.totalPaddyTransformer(lots);
         double totalMontant = lots.stream().mapToDouble(LotPaddyTransforme::getPrixTransformation).sum();
 
@@ -284,5 +327,54 @@ public class LotPaddyTransformerController {
 
         document.add(resume);
         document.close();
+    }
+
+    @GetMapping("/searchReference")
+    public ModelAndView searchReference(
+            @RequestParam("reference") String reference,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        ModelAndView m = new ModelAndView("LotPaddy_transforme");
+
+        int safePage = Math.max(page, 0);
+        String safeSortBy = "date";
+        if ("reference".equals(sortBy)
+            || "date".equals(sortBy)
+            || "quantite".equals(sortBy)
+            || "prixTransformation".equals(sortBy)) {
+            safeSortBy = sortBy;
+        }
+        Sort sort;
+        if ("asc".equalsIgnoreCase(sortDir)) {
+            sort = Sort.by(safeSortBy).ascending();
+        } else {
+            sort = Sort.by(safeSortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(safePage, 9, sort);
+        String safeReference = "";
+        if (reference != null) {
+            safeReference = reference.trim();
+        }
+        Page<LotPaddyTransforme> lotsPage = lotPaddyTransformerService.search(
+                safeReference,
+                pageable);
+
+        m.addObject("lotPaddyTransforme", lotsPage);
+        m.addObject("transformation", transformationService.getTransformation());
+        m.addObject("reference", reference);
+
+        if (lotsPage.isEmpty()) {
+            m.addObject("message", "Aucun resultat pour la reference recherchee");
+        }
+
+        Double total = lotPaddyTransformerService.totalPaddyTransformer();
+        if (total == null) {
+            m.addObject("lotPaddyVide", "aucun paddy transformer");
+        } else {
+            m.addObject("total", total);
+        }
+
+        return m;
     }
 }

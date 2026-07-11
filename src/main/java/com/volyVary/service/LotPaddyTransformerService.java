@@ -180,4 +180,7 @@ public class LotPaddyTransformerService {
         return total;
     }
 
+    public Page<LotPaddyTransforme> search(String reference, Pageable pageable) {
+        return lotPaddyTransformeRepository.rechercherParReference(reference, pageable);
+    }
 }

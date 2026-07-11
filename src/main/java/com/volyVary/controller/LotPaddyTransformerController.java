@@ -285,4 +285,34 @@ public class LotPaddyTransformerController {
         document.add(resume);
         document.close();
     }
+
+    @GetMapping("/searchReference")
+    public ModelAndView searchReference(
+            @RequestParam("reference") String reference,
+            @RequestParam(defaultValue = "0") int page) {
+        ModelAndView m = new ModelAndView("LotPaddy_transforme");
+
+        int safePage = Math.max(page, 0);
+        Pageable pageable = PageRequest.of(safePage, 9);
+        Page<LotPaddyTransforme> lotsPage = lotPaddyTransformerService.search(
+                reference == null ? "" : reference.trim(),
+                pageable);
+
+        m.addObject("lotPaddyTransforme", lotsPage);
+        m.addObject("transformation", transformationService.getTransformation());
+        m.addObject("reference", reference);
+
+        if (lotsPage.isEmpty()) {
+            m.addObject("message", "Aucun resultat pour la reference recherchee");
+        }
+
+        Double total = lotPaddyTransformerService.totalPaddyTransformer();
+        if (total == null) {
+            m.addObject("lotPaddyVide", "aucun paddy transformer");
+        } else {
+            m.addObject("total", total);
+        }
+
+        return m;
+    }
 }
